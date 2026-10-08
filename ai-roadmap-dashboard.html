@@ -233,6 +233,15 @@ tr.detail:hover > td { background: var(--sunken); }
 .check input { margin-top: 4px; width: 17px; height: 17px; accent-color: var(--accent); }
 .check span { display: block; font-size: .84rem; color: var(--muted); }
 
+/* Project cost table */
+.costs td { vertical-align: middle; }
+.costs input[type="number"] { width: 8.2em; text-align: right; font-family: var(--f-data); font-size: .82rem; padding: 4px 6px; }
+.costs select { font-size: .82rem; padding: 4px 6px; min-width: 11.5em; }
+.costs input[type="text"] { font-size: .82rem; padding: 4px 6px; min-width: 10em; }
+.costs td:nth-child(2) { white-space: nowrap; }
+.costs .t { font-weight: 600; line-height: 1.25; min-width: 200px; }
+.costs .d { font-size: .76rem; color: var(--muted); font-weight: 400; }
+.costs td.win { white-space: nowrap; font-family: var(--f-data); font-size: .82rem; }
 /* Budget chart */
 .chart svg { width: 100%; height: auto; display: block; }
 .chart text { fill: var(--muted); font-family: var(--f-data); font-size: 11px; }
@@ -510,6 +519,14 @@ ol.tight, ul.tight { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
           <li><strong>To change a use case's numbers,</strong> open its row on the Portfolio tab and record the source.</li>
         </ul>
       </div>
+    </div>
+    <div class="card">
+      <header><h3>Project costs</h3><span class="small muted">Every in-scope project. Edit a range here or in its Portfolio row; both stay in sync.</span></header>
+      <div class="tw" style="margin-top:10px"><table class="costs">
+        <thead><tr><th>Use case</th><th>Starts</th><th class="num">One-time low</th><th class="num">One-time high</th><th class="num">Annual low</th><th class="num">Annual high</th><th>Cost basis</th><th>Source / notes</th><th class="num">In window</th></tr></thead>
+        <tbody id="costBody"></tbody>
+      </table></div>
+      <p class="small muted" style="margin-top:8px">“In window” is what lands inside the 24 months given the project's start quarter, before program costs and contingency. Projects pushed past the window show $0 here.</p>
     </div>
     <div class="card">
       <h3>By department, within the window</h3>
@@ -1163,7 +1180,7 @@ function renderReadiness() {
 }
 
 // ─── Budget ──────────────────────────────────────────────────────────────────
-function renderBudget() {
+function renderBudget(keepCostRows) {
   const m = model, B = state.budget;
   ["env", "cont", "gov", "train", "staff"].forEach(k => { const el = $("#b" + k[0].toUpperCase() + k.slice(1)); if (document.activeElement !== el) el.value = B[k]; });
   const sumK = (fn) => [0, 1].map(k => m.qc.reduce((a, x) => a + fn(x)[k], 0));
@@ -1213,8 +1230,36 @@ function renderBudget() {
   const dept = {};
   m.inScope.forEach(x => { const c = m.perItem[x.id]; const d = dept[x.dept] = dept[x.dept] || { n: 0, lo: 0, hi: 0, rr: [0, 0] }; d.n++; d.lo += c.lo; d.hi += c.hi; const s = m.sched[x.id]; if (s && !s.blocked && s.start < H) { d.rr[0] += x.ann[0]; d.rr[1] += x.ann[1]; } });
   const maxD = Math.max(1, ...Object.values(dept).map(d => d.hi));
+  renderCostTable(keepCostRows);
   $("#deptTable").innerHTML = `<thead><tr><th>Department</th><th class="num">In scope</th><th class="num">24-month (before program + contingency)</th><th style="width:30%"></th><th class="num">Annual run-rate after</th></tr></thead><tbody>` +
     DEPTS.filter(d => dept[d]).map(d => { const r = dept[d]; return `<tr><td>${esc(d)}</td><td class="num">${r.n}</td><td class="num">${range([r.lo, r.hi])}</td><td><div style="position:relative;height:10px;background:var(--sunken);border-radius:5px"><div style="position:absolute;left:0;top:0;bottom:0;width:${100 * r.hi / maxD}%;background:var(--accent-soft);border-radius:5px"></div><div style="position:absolute;left:0;top:0;bottom:0;width:${100 * r.lo / maxD}%;background:var(--accent);border-radius:5px"></div></div></td><td class="num">${range(r.rr)}</td></tr>`; }).join("") + `</tbody>`;
+}
+function applyCostEdit(it, spec, value) {
+  const [k, i] = spec.split(","), n = Number(i);
+  it[k][n] = Math.max(0, Number(value) || 0);
+  if (it[k][0] > it[k][1]) it[k][n === 0 ? 1 : 0] = it[k][n];
+  if (it.basis === "Planning estimate") it.basis = "Staff estimate";
+}
+function renderCostTable(keepRows) {
+  const m = model;
+  const list = m.inScope.slice().sort((a, b) => DEPTS.indexOf(a.dept) - DEPTS.indexOf(b.dept) || (m.sched[a.id].start ?? 99) - (m.sched[b.id].start ?? 99));
+  const winCell = x => { const c = m.perItem[x.id]; return c.hi ? range([c.lo, c.hi]) : `<span class="muted">$0</span>`; };
+  const tot = list.reduce((a, x) => { a.one[0] += x.one[0]; a.one[1] += x.one[1]; a.ann[0] += x.ann[0]; a.ann[1] += x.ann[1]; a.win[0] += m.perItem[x.id].lo; a.win[1] += m.perItem[x.id].hi; return a; }, { one: [0, 0], ann: [0, 0], win: [0, 0] });
+  const totalRow = `<td>Total, ${list.length} projects</td><td></td><td class="num">${money(tot.one[0])}</td><td class="num">${money(tot.one[1])}</td><td class="num">${money(tot.ann[0])}/yr</td><td class="num">${money(tot.ann[1])}/yr</td><td></td><td></td><td class="num win">${range(tot.win)}</td>`;
+  if (keepRows) {
+    list.forEach(x => { const c = $(`#costBody [data-win="${x.id}"]`); if (c) c.innerHTML = winCell(x); const st = $(`#costBody [data-start="${x.id}"]`); if (st) st.textContent = startText(x.id); });
+    const t = $("#costTotal"); if (t) t.innerHTML = totalRow;
+    return;
+  }
+  const num = (x, spec, v, label) => `<td class="num"><input type="number" min="0" step="1000" data-cost="${spec}" data-id="${x.id}" value="${v}" aria-label="${esc(x.title)} ${label}"></td>`;
+  $("#costBody").innerHTML = list.map(x => `<tr>
+      <td><div class="t">${esc(x.title)}<div class="d">${esc(x.dept)} · ${TIERS[x.tier]}</div></div></td>
+      <td class="mono small" data-start="${x.id}">${startText(x.id)}</td>
+      ${num(x, "one,0", x.one[0], "one-time low")}${num(x, "one,1", x.one[1], "one-time high")}${num(x, "ann,0", x.ann[0], "annual low")}${num(x, "ann,1", x.ann[1], "annual high")}
+      <td><select data-f="basis" data-id="${x.id}" aria-label="${esc(x.title)} cost basis">${opt(BASIS.map(b => [b, b]), x.basis)}</select></td>
+      <td><input type="text" data-f="notes" data-id="${x.id}" value="${esc(x.notes)}" placeholder="URL, vendor, peer" aria-label="${esc(x.title)} cost source"></td>
+      <td class="num win" data-win="${x.id}">${winCell(x)}</td>
+    </tr>`).join("") + `<tr class="total" id="costTotal">${totalRow}</tr>`;
 }
 function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw || 1))); const n = raw / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p; }
 
@@ -1322,12 +1367,23 @@ function init() {
   $("#pfBody").addEventListener("change", e => {
     const el = e.target, it = byId(el.dataset.id); if (!it) return;
     if (el.dataset.k) it[el.dataset.k] = Number(el.value);
-    else if (el.dataset.cost) { const [k, i] = el.dataset.cost.split(","); it[k][Number(i)] = Math.max(0, Number(el.value) || 0); if (it[k][0] > it[k][1]) it[k][Number(i) === 0 ? 1 : 0] = it[k][Number(i)]; if (it.basis === "Planning estimate") it.basis = "Staff estimate"; }
+    else if (el.dataset.cost) applyCostEdit(it, el.dataset.cost, el.value);
     else if (el.dataset.f === "flags") it.flags = el.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
     else if (el.dataset.f === "dur") it.dur = Number(el.value);
     else if (el.dataset.f === "pin") it.pin = el.value === "" ? null : Number(el.value);
     else if (el.dataset.f) it[el.dataset.f] = el.value;
     renderAll();
+  });
+  // Project cost table edits: update state, then refresh totals without rebuilding the inputs
+  $("#costBody").addEventListener("change", e => {
+    const el = e.target, it = byId(el.dataset.id); if (!it) return;
+    if (el.dataset.cost) {
+      applyCostEdit(it, el.dataset.cost, el.value);
+      const k = el.dataset.cost.split(",")[0];
+      $$(`#costBody [data-id="${it.id}"][data-cost^="${k},"]`).forEach(inp => { inp.value = it[k][Number(inp.dataset.cost.split(",")[1])]; });
+      const b = $(`#costBody select[data-id="${it.id}"][data-f="basis"]`); if (b) b.value = it.basis;
+    } else if (el.dataset.f === "basis" || el.dataset.f === "notes") it[el.dataset.f] = el.value;
+    compute(); renderBudget(true); save();
   });
   $("#fSearch").addEventListener("input", e => { ui.filters.q = e.target.value; renderPortfolio(); });
   [["#fDept", "dept"], ["#fStatus", "status"], ["#fTier", "tier"]].forEach(([s, k]) => $(s).addEventListener("change", e => { ui.filters[k] = e.target.value; renderPortfolio(); }));
