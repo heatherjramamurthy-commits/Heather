@@ -1,0 +1,1381 @@
+<!doctype html><!--wrap-->
+<html lang="en"><!--wrap-->
+<head><!--wrap-->
+<meta charset="utf-8"><!--wrap-->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><!--wrap-->
+<title>District AI Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: plan-sheet masthead with a title block, tab strip, one working surface per tab.
+   Tokens: ink on drawing-paper neutrals, process-water teal accent, safety orange reserved for gates. */
+:root {
+  --paper: #f3f5f4;
+  --surface: #ffffff;
+  --sunken: #e9eeed;
+  --ink: #12262d;
+  --muted: #56686d;
+  --line: #d3dcdb;
+  --line-strong: #a9b8b8;
+  --accent: #17708c;
+  --accent-ink: #0d4a5e;
+  --accent-soft: #dcecf1;
+  --gate: #c2410c;
+  --gate-soft: #fbe8dc;
+  --good: #2c7a4b;
+  --good-soft: #dff0e5;
+  --warn: #a8670f;
+  --warn-soft: #f8ecd4;
+  --bad: #b42318;
+  --bad-soft: #f9e0dd;
+  --t-foundation: #5a5e96;
+  --t-quick: #2c7a4b;
+  --t-strategic: #17708c;
+  --t-longterm: #8b5a1c;
+  --shadow: 0 1px 2px rgba(18, 38, 45, .06), 0 4px 14px rgba(18, 38, 45, .05);
+  --f-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --f-body: "Barlow", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --r: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0d1618; --surface: #142024; --sunken: #1b2a2f; --ink: #e2eaea; --muted: #94a7aa;
+    --line: #273a3f; --line-strong: #3d5459; --accent: #5cb3cf; --accent-ink: #9fd6e8; --accent-soft: #17343d;
+    --gate: #f0894a; --gate-soft: #3b2418; --good: #6cc48f; --good-soft: #17301f; --warn: #e1b04e; --warn-soft: #352a14;
+    --bad: #f07a6e; --bad-soft: #3a1c19; --t-foundation: #a2a6e2; --t-quick: #6cc48f; --t-strategic: #5cb3cf; --t-longterm: #d9a45f;
+    --shadow: 0 1px 2px rgba(0,0,0,.3); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0d1618; --surface: #142024; --sunken: #1b2a2f; --ink: #e2eaea; --muted: #94a7aa;
+  --line: #273a3f; --line-strong: #3d5459; --accent: #5cb3cf; --accent-ink: #9fd6e8; --accent-soft: #17343d;
+  --gate: #f0894a; --gate-soft: #3b2418; --good: #6cc48f; --good-soft: #17301f; --warn: #e1b04e; --warn-soft: #352a14;
+  --bad: #f07a6e; --bad-soft: #3a1c19; --t-foundation: #a2a6e2; --t-quick: #6cc48f; --t-strategic: #5cb3cf; --t-longterm: #d9a45f;
+  --shadow: 0 1px 2px rgba(0,0,0,.3); color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 var(--f-body); -webkit-font-smoothing: antialiased; }
+h1, h2, h3, h4 { font-family: var(--f-display); font-weight: 600; line-height: 1.15; margin: 0; text-wrap: balance; letter-spacing: .01em; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.2rem; }
+h4 { font-size: 1.02rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mono, .num { font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.small { font-size: .84rem; }
+.eyebrow { font-family: var(--f-data); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+.wrap { max-width: 1280px; margin: 0 auto; padding-inline: max(16px, 2.5vw); }
+
+/* Masthead */
+.mast { background: var(--surface); border-bottom: 1px solid var(--line); }
+.mast-inner { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; padding-block: 22px 18px; }
+.mast h1 { font-size: clamp(2rem, 4.6vw, 3.1rem); font-weight: 700; letter-spacing: .005em; }
+.mast h1 .yrs { color: var(--accent); }
+.mast .lede { margin-top: 6px; max-width: 62ch; color: var(--muted); }
+.titleblock { display: grid; grid-template-columns: auto auto; border: 1.5px solid var(--ink); font-family: var(--f-data); font-size: .72rem; min-width: 0; }
+.titleblock div { padding: 4px 10px; border-bottom: 1px solid var(--line-strong); }
+.titleblock div:nth-child(odd) { border-right: 1px solid var(--line-strong); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.titleblock div:nth-last-child(-n+2) { border-bottom: 0; }
+.titleblock input { border: 0; background: transparent; font: inherit; width: 15ch; padding: 0; }
+
+.tabs { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--surface); border-bottom: 1px solid var(--line); }
+.tabs .wrap { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: thin; }
+.tab { border: 0; background: none; padding: 12px 14px 10px; font-family: var(--f-display); font-size: 1.05rem; font-weight: 600; letter-spacing: .02em; color: var(--muted); border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; }
+.tab:hover { color: var(--ink); }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+
+main { padding-block: 26px 60px; }
+.panel { display: grid; gap: 22px; }
+.panel[hidden] { display: none !important; }
+.panel-head { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: end; justify-content: space-between; }
+.panel-head p { max-width: 70ch; color: var(--muted); margin-top: 4px; }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px; box-shadow: var(--shadow); min-width: 0; }
+.card > h3 + *, .card > header + * { margin-top: 12px; }
+.card header { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 980px) { .grid-3, .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 720px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: minmax(0, 1fr); } .mast-inner { grid-template-columns: 1fr; } }
+
+/* Posture banner */
+.posture { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 28px; align-items: center; background: var(--ink); color: var(--paper); border-radius: var(--r); padding: 24px 26px; }
+.posture .eyebrow { color: color-mix(in srgb, var(--paper) 65%, transparent); }
+.posture h2 { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 700; margin-top: 4px; }
+.posture p { margin-top: 8px; max-width: 60ch; color: color-mix(in srgb, var(--paper) 85%, transparent); }
+.posture .ladder { display: grid; gap: 8px; }
+.ladder-step { display: grid; grid-template-columns: 9ch 1fr 4ch; gap: 10px; align-items: center; font-family: var(--f-data); font-size: .78rem; }
+.ladder-track { height: 10px; border-radius: 5px; background: color-mix(in srgb, var(--paper) 18%, transparent); position: relative; overflow: hidden; }
+.ladder-fill { position: absolute; inset: 0 auto 0 0; border-radius: 5px; background: var(--paper); }
+.ladder-mark { position: absolute; top: -3px; bottom: -3px; width: 2px; background: color-mix(in srgb, var(--paper) 55%, transparent); }
+@media (max-width: 720px) { .posture { grid-template-columns: 1fr; } }
+
+/* Stat tiles */
+.stat { display: grid; gap: 4px; align-content: start; }
+.stat .val { font-family: var(--f-display); font-size: 2rem; font-weight: 700; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.stat .sub { font-size: .86rem; color: var(--muted); }
+
+/* Chips & pills */
+.chip { display: inline-flex; align-items: center; gap: 5px; font-family: var(--f-data); font-size: .7rem; letter-spacing: .02em; padding: 2px 7px; border-radius: 3px; border: 1px solid var(--line); background: var(--sunken); color: var(--muted); white-space: nowrap; }
+.chip.tier { border: 0; color: var(--surface); font-weight: 500; }
+.chip.tier.foundation { background: var(--t-foundation); }
+.chip.tier.quick { background: var(--t-quick); }
+.chip.tier.strategic { background: var(--t-strategic); }
+.chip.tier.longterm { background: var(--t-longterm); }
+.chip.ot { border-color: var(--gate); color: var(--gate); background: var(--gate-soft); }
+.chip.sensitive { border-color: var(--warn); color: var(--warn); background: var(--warn-soft); }
+.chip.public { border-color: var(--accent); color: var(--accent-ink); background: var(--accent-soft); }
+.chip.good { border-color: var(--good); color: var(--good); background: var(--good-soft); }
+.chip.bad { border-color: var(--bad); color: var(--bad); background: var(--bad-soft); }
+.chip.warn { border-color: var(--warn); color: var(--warn); background: var(--warn-soft); }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; }
+button.chip { cursor: pointer; }
+
+/* Buttons & forms */
+.btn { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--accent); background: var(--accent); color: var(--surface); padding: 7px 14px; border-radius: 4px; font-weight: 600; font-size: .9rem; cursor: pointer; }
+.btn:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; color: var(--accent-ink); border-color: var(--line-strong); }
+.btn.danger { background: transparent; color: var(--bad); border-color: var(--bad); }
+.btn.small { padding: 4px 10px; font-size: .82rem; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+label.f { display: grid; gap: 4px; font-size: .82rem; font-weight: 600; color: var(--muted); min-width: 0; }
+input[type="text"], input[type="number"], input[type="month"], input[type="search"], select, textarea {
+  border: 1px solid var(--line-strong); background: var(--surface); border-radius: 4px; padding: 6px 8px; font-size: .9rem; width: 100%; min-width: 0;
+}
+textarea { min-height: 76px; resize: vertical; line-height: 1.4; }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.note { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: 10px 12px; border-radius: 0 4px 4px 0; font-size: .9rem; }
+.note.gate { border-color: var(--gate); background: var(--gate-soft); }
+.warn-box { border: 1px solid var(--bad); background: var(--bad-soft); color: var(--bad); padding: 8px 12px; border-radius: 4px; font-size: .88rem; }
+
+/* Tables */
+.tw { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+th { text-align: left; font-family: var(--f-data); font-size: .68rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 500; padding: 8px 8px; border-bottom: 1.5px solid var(--line-strong); white-space: nowrap; }
+td { padding: 9px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+td.num, th.num { text-align: right; }
+tr.total td { font-weight: 700; border-top: 1.5px solid var(--line-strong); }
+tbody tr:hover td { background: color-mix(in srgb, var(--accent-soft) 40%, transparent); }
+
+/* Portfolio */
+.filters { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 10px; }
+@media (max-width: 720px) { .filters { grid-template-columns: 1fr 1fr; } .filters > :first-child { grid-column: 1 / -1; } }
+.pf td { vertical-align: middle; }
+.pf td:last-child { white-space: nowrap; }
+.pf .t { font-weight: 600; line-height: 1.25; }
+.pf .d { font-size: .78rem; color: var(--muted); margin-top: 2px; }
+.pf select.mini { width: auto; padding: 3px 4px; font-size: .82rem; }
+.pf select.score { width: 3.4em; padding: 3px 2px; font-family: var(--f-data); font-size: .82rem; text-align: center; }
+.status-in { border-color: var(--good) !important; color: var(--good); }
+.status-out { color: var(--muted); }
+.status-review { border-color: var(--warn) !important; color: var(--warn); }
+.scorebar { display: grid; grid-template-columns: 2.4em 1fr; align-items: center; gap: 6px; min-width: 90px; }
+.scorebar .bar { height: 6px; background: var(--sunken); border-radius: 3px; overflow: hidden; }
+.scorebar .bar span { display: block; height: 100%; background: var(--accent); }
+tr.out td { opacity: .55; }
+tr.detail > td { background: var(--sunken); padding: 16px 18px; }
+tr.detail:hover > td { background: var(--sunken); }
+.detail-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; }
+@media (max-width: 860px) { .detail-grid { grid-template-columns: 1fr; } }
+.expander { border: 1px solid var(--line-strong); background: var(--surface); width: 28px; height: 28px; border-radius: 4px; cursor: pointer; font-family: var(--f-data); }
+.reasons { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; font-size: .84rem; }
+.reasons li { display: grid; grid-template-columns: 4.4em 1fr; gap: 6px; }
+.reasons li .q { font-family: var(--f-data); color: var(--muted); }
+.reasons li.bind .q, .reasons li.bind { color: var(--gate); font-weight: 600; }
+.addform[hidden] { display: none; }
+
+/* Gantt */
+.gantt { --cols: minmax(190px, 250px) repeat(8, minmax(62px, 1fr)) 56px; min-width: 820px; font-size: .84rem; }
+.g-row { display: grid; grid-template-columns: var(--cols); align-items: center; min-height: 34px; }
+.g-row > * { grid-row: 1; }
+.g-head { font-family: var(--f-data); font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.g-head .c { padding: 4px 6px; border-left: 1px solid var(--line); }
+.g-fy .c { border-bottom: 1px solid var(--line); font-weight: 500; color: var(--ink); }
+.g-lane { font-family: var(--f-display); font-size: 1.05rem; font-weight: 600; padding: 14px 0 4px; border-bottom: 1.5px solid var(--line-strong); display: flex; gap: 8px; align-items: center; }
+.g-lane .sw { width: 12px; height: 12px; border-radius: 2px; }
+.g-label { padding: 6px 10px 6px 0; line-height: 1.2; min-width: 0; }
+.g-label .w { display: block; font-size: .74rem; color: var(--gate); }
+.g-label .dp { display: block; font-size: .74rem; color: var(--muted); }
+.g-cell { align-self: stretch; border-left: 1px solid var(--line); }
+.g-row:nth-child(even) .g-cell { background: color-mix(in srgb, var(--sunken) 45%, transparent); }
+.g-bar { height: 20px; border-radius: 3px; margin: 0 3px; position: relative; display: flex; align-items: center; padding: 0 6px; color: var(--surface); font-family: var(--f-data); font-size: .66rem; white-space: nowrap; overflow: hidden; }
+.g-bar.foundation { background: var(--t-foundation); }
+.g-bar.quick { background: var(--t-quick); }
+.g-bar.strategic { background: var(--t-strategic); }
+.g-bar.longterm { background: var(--t-longterm); }
+.g-bar.cont { border-radius: 3px 0 0 3px; }
+.g-later { font-family: var(--f-data); font-size: .7rem; color: var(--gate); text-align: center; }
+.g-wait { height: 2px; margin: 0 3px; background: repeating-linear-gradient(90deg, var(--gate) 0 5px, transparent 5px 9px); align-self: center; }
+
+.heat td { text-align: center; font-family: var(--f-data); font-size: .78rem; padding: 6px 4px; }
+.heat td:first-child { text-align: left; font-family: var(--f-body); font-size: .86rem; white-space: nowrap; }
+.h-low { background: var(--bad-soft); color: var(--bad); }
+.h-mid { background: var(--warn-soft); color: var(--warn); }
+.h-hi { background: var(--good-soft); color: var(--good); }
+
+/* Readiness */
+.slider { display: grid; gap: 4px; padding-block: 10px; border-bottom: 1px solid var(--line); }
+.slider:last-child { border-bottom: 0; }
+.slider .top { display: flex; justify-content: space-between; gap: 12px; font-weight: 600; }
+.slider .top .num { font-size: 1.05rem; }
+.slider .hint { font-size: .8rem; color: var(--muted); }
+.check { display: grid; grid-template-columns: auto 1fr; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); align-items: start; }
+.check:last-child { border-bottom: 0; }
+.check input { margin-top: 4px; width: 17px; height: 17px; accent-color: var(--accent); }
+.check span { display: block; font-size: .84rem; color: var(--muted); }
+
+/* Budget chart */
+.chart svg { width: 100%; height: auto; display: block; }
+.chart text { fill: var(--muted); font-family: var(--f-data); font-size: 11px; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .8rem; color: var(--muted); }
+.legend i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+
+/* Horizon */
+.radar { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; align-items: start; }
+@media (max-width: 1100px) { .radar { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .radar { grid-template-columns: 1fr; } }
+.ring { display: grid; gap: 12px; min-width: 0; }
+.trend { min-width: 0; }
+.trend .chip { white-space: normal; text-align: left; }
+.ring > header { border-bottom: 3px solid var(--ring); padding-bottom: 6px; }
+.ring > header h3 { color: var(--ring); }
+.ring > header p { font-size: .82rem; color: var(--muted); }
+.trend { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 15px; display: grid; gap: 8px; }
+.trend h4 { font-size: 1.08rem; }
+.trend p { font-size: .87rem; }
+.trend .ev { font-size: .8rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 7px; }
+.trend .ev a { word-break: break-word; }
+
+/* Brief */
+#briefText { width: 100%; min-height: 520px; font-family: var(--f-data); font-size: .82rem; line-height: 1.55; background: var(--surface); }
+#scenarioJson { font-family: var(--f-data); font-size: .76rem; min-height: 140px; }
+
+.toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 10px 16px; border-radius: 5px; font-size: .9rem; box-shadow: var(--shadow); z-index: 100; max-width: calc(100% - 32px); }
+.foot { font-size: .8rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; max-width: 90ch; }
+details summary { cursor: pointer; font-weight: 600; }
+details[open] summary { margin-bottom: 10px; }
+ol.tight, ul.tight { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+.list-q { display: grid; gap: 0; }
+.list-q > div { display: grid; grid-template-columns: 5.2em 1fr; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+.list-q > div:last-child { border-bottom: 0; }
+.list-q .q { font-family: var(--f-data); font-size: .78rem; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head><!--wrap-->
+<body><!--wrap-->
+
+<header class="mast">
+  <div class="wrap mast-inner">
+    <div>
+      <div class="eyebrow">Wastewater district · Information Technology · Planning draft</div>
+      <h1>AI Roadmap <span class="yrs" id="mastYears">2027–2028</span></h1>
+      <p class="lede">Where AI can help the treatment plant, the collection system and the people who run them over the next two years, and what has to be in place first.</p>
+    </div>
+    <div class="titleblock" aria-label="Plan sheet title block">
+      <div>Sheet</div><div>AI-01</div>
+      <div>Scenario</div><div><input id="scenarioName" type="text" value="Baseline draft" aria-label="Scenario name"></div>
+      <div>Window</div><div id="tbWindow">Jan 2027 – Dec 2028</div>
+      <div>Horizon scan</div><div>Oct 2026</div>
+      <div>Status</div><div>For discussion</div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Dashboard sections">
+  <div class="wrap" role="tablist">
+    <button class="tab" role="tab" data-tab="overview">Overview</button>
+    <button class="tab" role="tab" data-tab="portfolio">Portfolio</button>
+    <button class="tab" role="tab" data-tab="roadmap">Roadmap</button>
+    <button class="tab" role="tab" data-tab="readiness">Readiness &amp; guardrails</button>
+    <button class="tab" role="tab" data-tab="budget">Budget</button>
+    <button class="tab" role="tab" data-tab="horizon">Horizon scan</button>
+    <button class="tab" role="tab" data-tab="brief">Brief &amp; save</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- OVERVIEW -->
+  <section class="panel" id="p-overview" data-panel="overview">
+    <div class="posture" id="postureBox"></div>
+    <div class="grid-4" id="statTiles"></div>
+    <div class="grid-2">
+      <div class="card">
+        <header><h3>Start in the next two quarters</h3><button class="btn ghost small" data-goto="roadmap">Full roadmap</button></header>
+        <div class="list-q" id="nextUp"></div>
+      </div>
+      <div class="card">
+        <header><h3>What's holding work back</h3><button class="btn ghost small" data-goto="readiness">Adjust readiness</button></header>
+        <div id="blockers"></div>
+      </div>
+    </div>
+    <div class="card">
+      <header><h3>Top priorities by score</h3><span class="small muted">Score blends value, feasibility, risk and effort. Weights are on the Portfolio tab.</span></header>
+      <div class="tw"><table><thead><tr><th>#</th><th>Use case</th><th>Department</th><th>Tier</th><th class="num">Score</th><th>Starts</th><th class="num">2-yr cost (mid)</th></tr></thead><tbody id="topTable"></tbody></table></div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section class="panel" id="p-portfolio" data-panel="portfolio" hidden>
+    <div class="panel-head">
+      <div>
+        <h2>Use case portfolio</h2>
+        <p>One list for everything: foundations, quick wins, strategic investments and long-term bets. Set status and scores here; the roadmap, budget and brief all recalculate from this list.</p>
+      </div>
+      <div class="row">
+        <button class="btn" id="toggleAdd">Add a use case</button>
+      </div>
+    </div>
+
+    <div class="card addform" id="addForm" hidden>
+      <h3>Add a use case</h3>
+      <div class="form-grid">
+        <label class="f">Title<input type="text" id="newTitle" placeholder="e.g., Lift station alarm triage"></label>
+        <label class="f">Department<select id="newDept"></select></label>
+        <label class="f">AI pattern<select id="newPattern"></select></label>
+        <label class="f">Data sensitivity<select id="newSens"></select></label>
+        <label class="f">Size<select id="newSize">
+          <option value="S">Small: quick win, existing tools</option>
+          <option value="M" selected>Medium: strategic, some integration</option>
+          <option value="L">Large: long-term, heavy data or integration</option>
+        </select></label>
+        <label class="f">Acquisition<select id="newAcq"><option value="existing">Existing licenses / in-house</option><option value="new" selected>New procurement</option></select></label>
+      </div>
+      <div class="form-grid" style="margin-top:12px">
+        <label class="f">Description<textarea id="newDesc" placeholder="What the AI does, who uses it, and what decision or task it supports."></textarea></label>
+        <label class="f">Cost basis and source notes<textarea id="newSource" placeholder="Optional: vendor pricing page, peer agency, staff estimate. Leave blank to use the size preset."></textarea></label>
+      </div>
+      <div class="warn-box" id="piiWarn" hidden style="margin-top:12px">This looks like it contains a password, token, API key or phone number. Remove security-sensitive details and try again.</div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn" id="addBtn">Add to portfolio as in scope</button>
+        <span class="small muted">Costs start from the size preset. Open the row afterward to refine them.</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="filters">
+        <label class="f">Search<input type="search" id="fSearch" placeholder="Title, description, flag…"></label>
+        <label class="f">Department<select id="fDept"><option value="">All departments</option></select></label>
+        <label class="f">Status<select id="fStatus"><option value="">All statuses</option><option value="in">In scope</option><option value="review">Under review</option><option value="out">Out of scope</option></select></label>
+        <label class="f">Tier<select id="fTier"><option value="">All tiers</option></select></label>
+      </div>
+      <p class="small muted" id="pfCount" style="margin-top:10px"></p>
+      <div class="tw" style="margin-top:6px">
+        <table class="pf">
+          <thead><tr><th></th><th>Use case</th><th>Status</th><th>Tier</th><th title="Value 1–5">Val</th><th title="Feasibility 1–5">Feas</th><th title="Risk 1–5">Risk</th><th title="Effort 1–5">Eff</th><th>Score</th><th class="num">2-yr cost</th><th>Starts</th></tr></thead>
+          <tbody id="pfBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <details class="card">
+      <summary>How the score works, and the weights</summary>
+      <p class="small">Score = weighted Value + weighted Feasibility − weighted Risk − weighted Effort, rescaled to 0–100. Each input is 1–5. Higher feasibility means the data, tools and people are closer to ready. The score sets priority order when projects compete for the same team capacity on the roadmap.</p>
+      <div class="form-grid" style="margin-top:12px">
+        <label class="f">Value weight<input type="number" id="wV" min="0" max="5" step="0.5"></label>
+        <label class="f">Feasibility weight<input type="number" id="wF" min="0" max="5" step="0.5"></label>
+        <label class="f">Risk weight<input type="number" id="wR" min="0" max="5" step="0.5"></label>
+        <label class="f">Effort weight<input type="number" id="wE" min="0" max="5" step="0.5"></label>
+      </div>
+    </details>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="panel" id="p-roadmap" data-panel="roadmap" hidden>
+    <div class="panel-head">
+      <div>
+        <h2>Roadmap</h2>
+        <p>Calculated from the in-scope portfolio. Each item starts at the earliest quarter where its prerequisites are finished, readiness gates are met, procurement lead time has passed and the team has capacity. A dashed orange line shows waiting time, and the reason is printed under the name.</p>
+      </div>
+      <label class="f" style="min-width:180px">Group rows by<select id="groupBy"><option value="tier">Tier</option><option value="dept">Department</option></select></label>
+    </div>
+    <div class="card">
+      <div class="tw"><div class="gantt" id="gantt"></div></div>
+      <div class="legend" style="margin-top:12px">
+        <span><i style="background:var(--t-foundation)"></i>Foundation</span>
+        <span><i style="background:var(--t-quick)"></i>Quick win</span>
+        <span><i style="background:var(--t-strategic)"></i>Strategic</span>
+        <span><i style="background:var(--t-longterm)"></i>Long-term bet</span>
+        <span><i style="background:repeating-linear-gradient(90deg,var(--gate) 0 4px,transparent 4px 7px)"></i>Waiting on a gate or prerequisite</span>
+      </div>
+    </div>
+    <div style="display:grid;gap:22px">
+      <div class="card">
+        <header><h3>Projected readiness by quarter</h3><span class="small muted">Today's scores plus the lift each finished foundation provides</span></header>
+        <div class="tw"><table class="heat" id="heat"></table></div>
+      </div>
+      <div class="card">
+        <header><h3>Beyond the window or blocked</h3></header>
+        <div id="deferred"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- READINESS -->
+  <section class="panel" id="p-readiness" data-panel="readiness" hidden>
+    <div class="panel-head">
+      <div>
+        <h2>Readiness &amp; guardrails</h2>
+        <p>Score where the District is today, 0–100. Foundations raise these scores as they finish, which is what opens the gates for higher-risk work. Be candid: a low score delays work. It doesn't block a plan.</p>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Readiness today</h3>
+        <div id="sliders"></div>
+      </div>
+      <div class="grid" style="display:grid;gap:22px;align-content:start">
+        <div class="card">
+          <h3>Planning assumptions</h3>
+          <div class="form-grid" style="margin-top:12px">
+            <label class="f">Roadmap starts<input type="month" id="aStart"></label>
+            <label class="f">Fiscal year begins<select id="aFy"><option value="7">July</option><option value="10">October</option><option value="1">January</option></select></label>
+            <label class="f">Procurement lead time (new purchases)<select id="aLead"><option value="0">Under 3 months</option><option value="1">3–6 months</option><option value="2">6–12 months</option><option value="4">Over 12 months</option></select></label>
+            <label class="f">Concurrent project capacity<select id="aCap"><option value="2">2 slots: very thin</option><option value="3">3 slots</option><option value="4">4 slots</option><option value="5">5 slots</option><option value="6">6 slots: dedicated AI team</option></select></label>
+            <label class="f">Sensitive data stance<select id="aStance"><option value="strict">Strict: no sensitive data until controls proven</option><option value="standard">Standard: sensitive data with review</option></select></label>
+            <label class="f">Human review<select id="aReview"><option>Required for all AI outputs used in District work</option><option>Required for external-facing and regulatory outputs</option><option>Not yet defined</option></select></label>
+          </div>
+          <p class="small muted" style="margin-top:10px">Capacity counts small projects (effort 1–2) as half a slot and large ones (effort 4–5) as one and a half. Foundations run as an enterprise program and don't use slots.</p>
+        </div>
+        <div class="card">
+          <h3>Gate rules</h3>
+          <p class="small muted">Minimum readiness score needed in the quarter a use case starts. The strict stance adds 10 points to sensitive and OT gates.</p>
+          <div class="tw" style="margin-top:8px"><table id="gateTable"></table></div>
+        </div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <header><h3>Non-negotiables for this window</h3></header>
+        <ul class="tight small" style="margin-top:10px">
+          <li><strong>No AI writes to SCADA, PLCs or control systems.</strong> Plant and collections models are advisory: an operator decides. Revisit after supervised trials and a cybersecurity review.</li>
+          <li><strong>A human signs every regulatory submission.</strong> DMRs, annual reports and SSO reports are certified by staff, with every number traceable to LIMS or SCADA.</li>
+          <li><strong>No AI in hiring or discipline decisions.</strong> Drafting help for HR documents is fine. Screening or ranking people is not.</li>
+          <li><strong>Disclose AI on public-facing channels.</strong> Website assistants are labeled, and emergencies like sewer backups go straight to a person.</li>
+          <li><strong>Treat prompts and outputs as potential public records.</strong> Use the District's sanctioned tools only, with retention set by policy.</li>
+          <li><strong>Infrastructure maps and control-system documents stay Restricted.</strong> They never go into consumer AI tools.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <header><h3>Decision checklist</h3><span class="small muted" id="checkCount"></span></header>
+        <div id="checklist"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUDGET -->
+  <section class="panel" id="p-budget" data-panel="budget" hidden>
+    <div class="panel-head">
+      <div>
+        <h2>Budget</h2>
+        <p>Costs follow the schedule: one-time costs land while a project is underway, and subscriptions start when it starts. If something moves later on the roadmap, its cost moves with it. All figures are planning ranges, not quotes.</p>
+      </div>
+    </div>
+    <div class="grid-4" id="budgetTiles"></div>
+    <div class="card">
+      <header><h3>Spend by quarter (midpoint)</h3><div class="legend"><span><i style="background:var(--t-strategic)"></i>One-time</span><span><i style="background:var(--t-foundation)"></i>Recurring</span><span><i style="background:var(--line-strong)"></i>Program and contingency</span><span><i style="background:var(--gate)"></i><span id="envLegend">Budget envelope</span></span></div></header>
+      <div class="chart" id="budgetChart"></div>
+    </div>
+    <div class="card">
+      <h3>By fiscal year</h3>
+      <div class="tw"><table id="fyTable"></table></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Program costs and envelope</h3>
+        <div class="form-grid" style="margin-top:12px">
+          <label class="f">Annual AI budget envelope ($)<input type="number" id="bEnv" min="0" step="10000"></label>
+          <label class="f">Contingency %<input type="number" id="bCont" min="0" max="50" step="1"></label>
+          <label class="f">Governance, security &amp; policy support, 24 mo ($)<input type="number" id="bGov" min="0" step="5000"></label>
+          <label class="f">Training &amp; change management, 24 mo ($)<input type="number" id="bTrain" min="0" step="5000"></label>
+          <label class="f">Internal staff time equivalent, 24 mo ($)<input type="number" id="bStaff" min="0" step="5000"></label>
+        </div>
+        <p class="small muted" style="margin-top:10px">Program costs are spread evenly across the eight quarters. Contingency applies to everything.</p>
+      </div>
+      <div class="card">
+        <h3>Reading the budget</h3>
+        <ul class="tight small" style="margin-top:10px">
+          <li><strong>Ranges are wide on purpose.</strong> The low end assumes existing licenses and light integration. The high end assumes new platforms and consultant help.</li>
+          <li><strong>Watch the run-rate.</strong> Subscriptions keep billing after 2028. Plan year three before approving year one.</li>
+          <li><strong>Grants can offset foundations.</strong> Cybersecurity and resilience grant programs may cover IT/OT and data work. Check current federal and state rounds.</li>
+          <li><strong>To change a use case's numbers,</strong> open its row on the Portfolio tab and record the source.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <h3>By department, within the window</h3>
+      <div class="tw"><table id="deptTable"></table></div>
+    </div>
+  </section>
+
+  <!-- HORIZON -->
+  <section class="panel" id="p-horizon" data-panel="horizon" hidden>
+    <div class="panel-head">
+      <div>
+        <h2>Horizon scan</h2>
+        <p>What's changed in AI that matters to a wastewater agency, sorted by what to do about it. Vendor-reported results are labeled. Ask for them to be reproduced on District data before buying. Last researched October 2026; refresh this quarterly.</p>
+      </div>
+    </div>
+    <div class="radar" id="radar"></div>
+  </section>
+
+  <!-- BRIEF -->
+  <section class="panel" id="p-brief" data-panel="brief" hidden>
+    <div class="panel-head">
+      <div>
+        <h2>Brief &amp; save</h2>
+        <p>A plain-text leadership brief generated from the current scenario. Copy it into a memo or staff report. Save the scenario as text to share it with the team or reload it later.</p>
+      </div>
+      <div class="row"><button class="btn" id="copyBrief">Copy brief</button></div>
+    </div>
+    <textarea id="briefText" readonly aria-label="Generated leadership brief"></textarea>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Save this scenario</h3>
+        <p class="small muted" style="margin-top:6px">Your edits are kept in this browser automatically. To share a scenario, copy this text and send it. Anyone can paste it into the Load box.</p>
+        <textarea id="scenarioJson" readonly aria-label="Scenario data" style="margin-top:10px"></textarea>
+        <div class="row" style="margin-top:10px"><button class="btn ghost" id="copyJson">Copy scenario text</button></div>
+      </div>
+      <div class="card">
+        <h3>Load or reset</h3>
+        <label class="f" style="margin-top:10px">Paste scenario text<textarea id="loadJson" placeholder="Paste scenario text here"></textarea></label>
+        <div class="row" style="margin-top:10px">
+          <button class="btn ghost" id="loadBtn">Load pasted scenario</button>
+          <label class="btn ghost" for="loadFile" style="cursor:pointer">Load from file…</label>
+          <input type="file" id="loadFile" accept=".json,.txt,application/json" hidden>
+        </div>
+        <div class="row" style="margin-top:16px"><button class="btn danger" id="resetBtn">Reset to sample data</button></div>
+      </div>
+    </div>
+    <p class="foot">Planning aid only. Costs are directional ranges built from public-sector benchmarks and vendor list pricing; they are not quotes. Validate against procurement, finance, cybersecurity, records and legal review before using any figure for budget or implementation decisions.</p>
+  </section>
+</main>
+
+<div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+// ─── Reference data ──────────────────────────────────────────────────────────
+const H = 8, MAXQ = 20;
+const AREAS = [
+  { k: "gov", label: "Governance & policy", good: "Board-adopted AI policy, review group meets, intake form in use, vendor AI terms standard." },
+  { k: "cyber", label: "Cybersecurity & OT", good: "EPA water-sector checklist done, OT segmented with no inbound paths, MFA everywhere, vendor security reviews routine." },
+  { k: "data", label: "Data readiness", good: "Data classified and labeled; CMMS, GIS, LIMS and historian data clean, owned and reachable from one platform." },
+  { k: "staff", label: "Staff capacity & skills", good: "Staff trained on safe use; champions in each department; IT has time set aside for AI work." },
+  { k: "procurement", label: "Procurement path", good: "Cooperative contracts identified, AI contract clauses standard, security review built into purchasing." },
+  { k: "budget", label: "Budget alignment", good: "AI line items in the adopted budget, recurring costs visible, a funding plan for year two and beyond." }
+];
+const TIERS = { foundation: "Foundation", quick: "Quick win", strategic: "Strategic", longterm: "Long-term bet" };
+const TIER_ORDER = ["foundation", "quick", "strategic", "longterm"];
+const PATTERNS = { program: "Program", assistant: "Assistant / search", document: "Document AI", predictive: "Predictive ML", vision: "Computer vision", optimization: "Optimization", agent: "Agentic workflow" };
+const SENS = { internal: "Internal data", public: "Public-facing", sensitive: "Sensitive data", ot: "OT / SCADA data" };
+const STATUS = { in: "In scope", review: "Under review", out: "Out of scope" };
+const BASIS = ["Planning estimate", "Staff estimate", "Market-informed", "Vendor quote", "Peer agency", "Approved budget"];
+const DEPTS = ["Enterprise / IT", "Treatment Plant Operations", "Collections & Conveyance", "Maintenance & Asset Mgmt", "Capital Engineering", "Planning & Design Engineering", "Permitting & Source Control", "Laboratory", "Regulatory Compliance", "Finance & Procurement", "Administration"];
+
+// i: id, d: dept, t: title, x: description, tier, p: pattern, s: sensitivity, a: acquisition,
+// v/f/r/e: value, feasibility, risk, effort (1–5), dur: quarters, one/ann: [low, high] $, pre: prerequisite ids,
+// boost: readiness points added after a foundation finishes, kpi, flags, st: default status
+const SEED = [
+  { i: "f-gov", d: "Enterprise / IT", t: "AI policy, review group & vendor AI terms", tier: "foundation", p: "program", s: "internal", a: "existing", v: 5, f: 4, r: 1, e: 2, dur: 2, one: [15000, 40000], ann: [0, 5000], pre: [], boost: { gov: 25, procurement: 15 }, st: "in",
+    x: "Adapt the GovAI Coalition policy and vendor templates (aligned to the NIST AI RMF), stand up a cross-department AI review group, launch a use-case intake form, and make no-training-on-District-data and security terms standard in AI contracts.",
+    kpi: "Policy adopted by the Board; every new AI tool goes through intake.", flags: ["Board adoption timing drives the start of nearly everything downstream.", "Publish an AI use register on the District website."] },
+  { i: "f-data", d: "Enterprise / IT", t: "Data classification, sensitivity labels & DLP", tier: "foundation", p: "program", s: "internal", a: "existing", v: 5, f: 3, r: 1, e: 3, dur: 3, one: [20000, 60000], ann: [5000, 15000], pre: [], boost: { data: 15, gov: 5, cyber: 5 }, st: "in",
+    x: "Define Public / Internal / Confidential / Restricted (security-sensitive infrastructure maps and SCADA documents are Restricted). Fix over-shared SharePoint and Teams sites, then apply sensitivity labels and data-loss prevention.",
+    kpi: "Labels on the top 10 sites; DLP policies active; over-sharing report clean.", flags: ["Copilot-style assistants can surface anything a user can technically open. Fix permissions first."] },
+  { i: "f-assist", d: "Enterprise / IT", t: "Sanctioned AI assistant + measured pilot cohort", tier: "foundation", p: "assistant", s: "internal", a: "existing", v: 5, f: 4, r: 2, e: 2, dur: 1, one: [5000, 15000], ann: [22000, 45000], pre: [], boost: { staff: 5, gov: 5 }, st: "in",
+    x: "Give every employee a District-approved assistant with enterprise data protection (e.g., M365 Copilot Chat), plus 60–100 paid seats for a measured pilot across departments. This replaces shadow use of consumer tools.",
+    kpi: "Weekly active users; self-reported hours saved; no consumer-AI policy exceptions.", flags: ["Launch with interim acceptable-use guidance while the full policy goes to the Board.", "Partner sources report about an 8% government price increase for Copilot from July 2026. Budget for license inflation."] },
+  { i: "f-lit", d: "Enterprise / IT", t: "AI literacy & role-based training", tier: "foundation", p: "program", s: "internal", a: "existing", v: 4, f: 5, r: 1, e: 2, dur: 3, one: [10000, 25000], ann: [5000, 15000], pre: [], boost: { staff: 25 }, st: "in",
+    x: "Short required training for all staff (what's allowed, checking outputs, records), hands-on labs for power users and the IT AI team, monthly office hours, and an AI champion in each department.",
+    kpi: "90% staff completion; a champion in every department.", flags: [] },
+  { i: "f-rec", d: "Enterprise / IT", t: "AI records retention & public records readiness", tier: "foundation", p: "program", s: "internal", a: "existing", v: 4, f: 4, r: 1, e: 2, dur: 2, one: [8000, 20000], ann: [2000, 6000], pre: ["f-gov"], boost: { gov: 10 }, st: "in",
+    x: "Set retention rules for prompts, outputs and agent logs; decide what's transitory and what's a record; write a playbook for public records requests that ask for AI chats.",
+    kpi: "Retention schedule approved; PRA playbook for AI records in use.", flags: ["Current legal commentary (ABA, UNC School of Government, CSDA) treats prompts and outputs used for public business as public records."] },
+  { i: "f-ot", d: "Enterprise / IT", t: "IT/OT data bridge for plant & collections telemetry", tier: "foundation", p: "program", s: "ot", a: "new", v: 5, f: 3, r: 2, e: 4, dur: 4, one: [60000, 150000], ann: [15000, 40000], pre: [], boost: { cyber: 15, data: 10 }, st: "in",
+    x: "One-way, segmented replication of SCADA historian, lift station and flow telemetry to an IT-side analytics zone, following EPA's water-sector cybersecurity checklist. Models read data. Nothing writes back to control systems.",
+    kpi: "Historian data available read-only in the analytics zone; OT asset inventory and network diagram current.", flags: ["CISA (July 2026) warned of active targeting of internet-exposed PLCs in water and wastewater.", "Coordinate with the SCADA integrator. Allow no inbound paths to OT."] },
+  { i: "f-plat", d: "Enterprise / IT", t: "Asset & operations data platform (CMMS, GIS, LIMS, flow)", tier: "foundation", p: "program", s: "internal", a: "new", v: 5, f: 3, r: 1, e: 4, dur: 4, one: [80000, 200000], ann: [20000, 50000], pre: [], boost: { data: 25 }, st: "in",
+    x: "Connect and clean the core data in one governed platform with a data catalog: CMMS work orders and failure codes, GIS pipe attributes, LIMS results, flow monitoring and rainfall.",
+    kpi: "Pipe, asset and work-order data in one catalog with named owners and quality scores.", flags: ["Asset data quality in aging systems is usually the long pole. Budget real cleanup time."] },
+
+  { i: "it-help", d: "Enterprise / IT", t: "Helpdesk ticket triage & reply drafts", tier: "quick", p: "assistant", s: "internal", a: "existing", v: 3, f: 4, r: 1, e: 2, dur: 2, one: [5000, 12000], ann: [3000, 8000], pre: ["f-gov"], st: "in",
+    x: "Classify and route tickets and draft replies for common requests in the existing ITSM tool.", kpi: "Tier-1 resolution time down 25%.", flags: ["Technicians review before anything is sent or closed."] },
+  { i: "it-soc", d: "Enterprise / IT", t: "AI-assisted security monitoring & phishing triage", tier: "strategic", p: "predictive", s: "sensitive", a: "new", v: 5, f: 3, r: 3, e: 3, dur: 3, one: [10000, 30000], ann: [25000, 60000], pre: ["f-gov"], st: "in",
+    x: "Use AI features in the security stack or a managed detection service to triage alerts, analyze reported phishing and summarize incidents across IT and OT logs.", kpi: "Mean time to triage alerts down 50%.", flags: ["The EPA/WaterISAC Q3 2026 bulletin flags AI as both a growing threat and a defensive tool for water utilities.", "Check what your current security vendors already include before buying."] },
+  { i: "it-know", d: "Enterprise / IT", t: "District knowledge assistant (policies, SOPs, Board actions)", tier: "strategic", p: "assistant", s: "internal", a: "new", v: 4, f: 3, r: 2, e: 3, dur: 3, one: [15000, 40000], ann: [8000, 20000], pre: ["f-data", "f-assist"], st: "review",
+    x: "Search-and-answer assistant over approved policies, SOPs, Board resolutions and admin procedures, with citations to the source document.", kpi: "Every answer cites a source; 80% rated helpful.", flags: ["Only current, approved documents go into the index."] },
+  { i: "it-agent", d: "Enterprise / IT", t: "Back-office agents with human approval steps", tier: "longterm", p: "agent", s: "internal", a: "existing", v: 4, f: 2, r: 3, e: 4, dur: 3, one: [20000, 50000], ann: [10000, 30000], pre: ["f-assist", "f-rec"], st: "review",
+    x: "Agents that handle multi-step routine work, such as onboarding checklists, requisition prep and meeting follow-ups, and pause for a person to approve before acting.", kpi: "Cycle time on targeted workflows down 30% with zero unapproved actions.", flags: ["Log every agent action as a record.", "Least-privilege permissions. Track NIST's AI Agent Standards Initiative (launched Feb 2026)."] },
+
+  { i: "po-shift", d: "Treatment Plant Operations", t: "Operator shift summaries & log drafting", tier: "quick", p: "assistant", s: "internal", a: "existing", v: 3, f: 4, r: 2, e: 2, dur: 2, one: [5000, 15000], ann: [3000, 8000], pre: ["f-assist"], st: "in",
+    x: "Draft end-of-shift summaries from operator notes, alarms and process data exports for the oncoming crew.", kpi: "Handoff prep time down 30 minutes per shift.", flags: ["Operators review and sign every report. Read-only data access."] },
+  { i: "po-om", d: "Treatment Plant Operations", t: "O&M manual & SOP assistant with citations", tier: "strategic", p: "assistant", s: "internal", a: "new", v: 4, f: 3, r: 3, e: 3, dur: 3, one: [20000, 45000], ann: [8000, 18000], pre: ["f-data", "f-assist"], st: "review",
+    x: "Operators ask questions of O&M manuals, SOPs and vendor documents and get answers with page citations.", kpi: "Answers cite a manual page every time; used on every shift.", flags: ["Safety-critical context: no answer without a cited source.", "Digitize and version O&M manuals first."] },
+  { i: "po-sensor", d: "Treatment Plant Operations", t: "Instrument drift detection & virtual sensors", tier: "strategic", p: "predictive", s: "ot", a: "new", v: 4, f: 3, r: 2, e: 3, dur: 3, one: [25000, 60000], ann: [10000, 20000], pre: ["f-ot"], st: "in",
+    x: "Flag drifting DO, ammonia, pH and flow instruments, and estimate missing or unreliable readings from related signals.", kpi: "Instrument faults caught before they affect control or reporting.", flags: ["Calibration records must be available to tell drift from real process change."] },
+  { i: "po-pdm", d: "Treatment Plant Operations", t: "Predictive maintenance for pumps, blowers & centrifuges", tier: "strategic", p: "predictive", s: "ot", a: "new", v: 5, f: 3, r: 3, e: 4, dur: 4, one: [50000, 110000], ann: [18000, 35000], pre: ["f-ot", "f-plat"], st: "in",
+    x: "Forecast failures on critical rotating equipment from vibration, temperature, run-hours and work-order history.", kpi: "Unplanned downtime on critical assets down 20%.", flags: ["Needs 12+ months of usable failure history from CMMS.", "Plan for model drift monitoring after go-live."] },
+  { i: "po-aer", d: "Treatment Plant Operations", t: "Aeration energy optimization (advisory first)", tier: "longterm", p: "optimization", s: "ot", a: "new", v: 5, f: 3, r: 4, e: 4, dur: 4, one: [60000, 150000], ann: [20000, 45000], pre: ["f-ot", "po-sensor"], st: "in",
+    x: "A model recommends dissolved-oxygen and airflow setpoints from loads and conditions, and operators accept or reject them. Closed-loop control only after a supervised trial and cybersecurity review.", kpi: "kWh per million gallons treated, with permit compliance unchanged.",
+    flags: ["A July 2026 NBER working paper on French plants found 5.4% lower electricity use and 8.2% lower energy spend under AI aeration control. Vendor case studies claim up to 30%.", "Aeration is usually the plant's largest electrical load. Establish the baseline first."] },
+  { i: "po-chem", d: "Treatment Plant Operations", t: "Chemical dosing optimization", tier: "longterm", p: "optimization", s: "ot", a: "new", v: 4, f: 2, r: 3, e: 4, dur: 3, one: [40000, 90000], ann: [15000, 30000], pre: ["f-ot"], st: "review",
+    x: "Recommend polymer, ferric and hypochlorite dosing based on solids, flow and quality data.", kpi: "Chemical cost per MG down 10% with no quality impact.", flags: ["Advisory only during this window."] },
+  { i: "po-twin", d: "Treatment Plant Operations", t: "Process digital twin for what-if planning", tier: "longterm", p: "optimization", s: "ot", a: "new", v: 4, f: 2, r: 2, e: 5, dur: 4, one: [120000, 300000], ann: [30000, 60000], pre: ["f-ot", "f-plat"], st: "review",
+    x: "A calibrated process model with ML for wet-weather, nutrient-limit and capacity scenarios. It's a planning tool first, not a control system.", kpi: "Used in at least two capital or permit decisions.", flags: ["WRF began a 31-month AI-for-treatment project with Stantec and WSSC Water in March 2026. Watch its results before committing."] },
+  { i: "po-auto", d: "Treatment Plant Operations", t: "Autonomous closed-loop plant control", tier: "longterm", p: "agent", s: "ot", a: "new", v: 4, f: 1, r: 5, e: 5, dur: 4, one: [150000, 400000], ann: [40000, 90000], pre: ["po-aer"], st: "out",
+    x: "AI directly adjusts setpoints across processes without operator approval.", kpi: "n/a", flags: ["Not recommended this window. Revisit after supervised optimization results and OT security maturity."] },
+
+  { i: "am-wo", d: "Maintenance & Asset Mgmt", t: "Work order cleanup & failure coding", tier: "quick", p: "document", s: "internal", a: "existing", v: 4, f: 4, r: 1, e: 2, dur: 2, one: [8000, 20000], ann: [3000, 8000], pre: ["f-assist"], st: "in",
+    x: "Standardize free-text work order notes into failure codes and asset IDs, building the history that predictive maintenance needs later.", kpi: "Share of work orders with a valid failure code above 85%.", flags: ["Maintenance supervisors approve the code mappings."] },
+
+  { i: "cc-cctv", d: "Collections & Conveyance", t: "AI-assisted CCTV defect coding (NASSCO PACP)", tier: "strategic", p: "vision", s: "internal", a: "new", v: 5, f: 4, r: 2, e: 2, dur: 2, one: [15000, 40000], ann: [30000, 80000], pre: ["f-gov"], st: "in",
+    x: "Computer vision pre-codes sewer CCTV footage to PACP and certified staff review it. Works with existing trucks and inspection software.", kpi: "Coding backlog cleared; review time per mile down 50%; QA agreement 90% or better.",
+    flags: ["Vendor accuracy claims (e.g., 99%) must be tested on District footage with PACP-certified QA sampling.", "Confirm export to CMMS/GIS and PACP version compliance."] },
+  { i: "cc-cof", d: "Collections & Conveyance", t: "Pipe likelihood/consequence-of-failure model", tier: "strategic", p: "predictive", s: "internal", a: "new", v: 5, f: 3, r: 2, e: 3, dur: 3, one: [40000, 90000], ann: [10000, 25000], pre: ["f-plat", "cc-cctv"], st: "in",
+    x: "Score every pipe segment's risk from condition, age, material, soils and consequence to rank rehab and replacement for the CIP.", kpi: "CIP rehab list driven by risk score; model reviewed annually.", flags: ["Engineering owns the model assumptions; it informs, not decides, the CIP."] },
+  { i: "cc-ii", d: "Collections & Conveyance", t: "Inflow & infiltration hotspot analytics", tier: "strategic", p: "predictive", s: "internal", a: "new", v: 4, f: 3, r: 1, e: 3, dur: 3, one: [30000, 70000], ann: [8000, 20000], pre: ["f-plat"], st: "in",
+    x: "Relate flow-meter and rainfall data to find the basins with the worst I&I and target smoke testing and rehab.", kpi: "I&I studies targeted to the top basins; wet-weather peak flows tracked.", flags: [] },
+  { i: "cc-sso", d: "Collections & Conveyance", t: "Wet-weather overflow & surcharge early warning", tier: "longterm", p: "predictive", s: "sensitive", a: "new", v: 5, f: 2, r: 3, e: 4, dur: 4, one: [50000, 120000], ann: [15000, 35000], pre: ["f-plat", "f-ot"], st: "review",
+    x: "Forecast surcharge and overflow risk hours ahead from radar rainfall, flow and level sensors, so crews can be staged.", kpi: "Crew pre-staging before storms; SSO volume trend down.", flags: ["Unitywater (Australia) reports overflow prediction up to 6 hours ahead; WRF Project 5297 is producing smart-sewer guidance.", "Alerts support crews; they never replace regulatory SSO reporting."] },
+  { i: "cc-clean", d: "Collections & Conveyance", t: "Risk-based sewer cleaning schedules", tier: "strategic", p: "predictive", s: "internal", a: "new", v: 4, f: 3, r: 1, e: 3, dur: 3, one: [20000, 50000], ann: [5000, 15000], pre: ["f-plat"], st: "review",
+    x: "Predict FOG, root and debris hotspots from past stoppages and cleaning results to set hydro-jetting frequency segment by segment.", kpi: "Blockage-caused SSOs down 15%; cleaning footage redirected to hotspots.", flags: [] },
+  { i: "cc-field", d: "Collections & Conveyance", t: "Field crew assistant (voice notes → work orders)", tier: "strategic", p: "vision", s: "internal", a: "new", v: 3, f: 3, r: 2, e: 3, dur: 3, one: [15000, 35000], ann: [10000, 25000], pre: ["f-assist"], st: "review",
+    x: "Crews dictate notes and snap photos in the field; AI drafts the work order and tags the asset for supervisor review.", kpi: "Work order completion time down 20%.", flags: ["Must work offline or with poor coverage."] },
+
+  { i: "ce-rfi", d: "Capital Engineering", t: "RFI & submittal summarization and routing", tier: "quick", p: "document", s: "internal", a: "existing", v: 3, f: 4, r: 1, e: 2, dur: 2, one: [5000, 12000], ann: [3000, 8000], pre: ["f-assist"], st: "in",
+    x: "Summarize and categorize incoming RFIs and submittals, and route them to the right reviewer with spec references.", kpi: "PM review time per RFI down 30%.", flags: ["PMs keep authority over every response."] },
+  { i: "ce-spec", d: "Capital Engineering", t: "Project document Q&A (specs, contracts, reports)", tier: "strategic", p: "assistant", s: "internal", a: "new", v: 4, f: 3, r: 2, e: 3, dur: 3, one: [20000, 45000], ann: [8000, 18000], pre: ["f-data", "f-assist"], st: "review",
+    x: "Ask questions across a project's specs, contracts, geotech and design reports, with cited answers.", kpi: "Time to find contract answers down 50%.", flags: [] },
+  { i: "ce-est", d: "Capital Engineering", t: "Cost estimate benchmarking against bid tabs", tier: "strategic", p: "predictive", s: "internal", a: "new", v: 4, f: 2, r: 2, e: 3, dur: 3, one: [20000, 50000], ann: [6000, 12000], pre: ["f-plat"], st: "review",
+    x: "Compare engineer's estimates against historical bid tabs and regional cost data to flag outliers.", kpi: "Estimate-to-bid variance narrowed.", flags: ["Historical bid tabs need cleanup and structure first."] },
+  { i: "ce-daily", d: "Capital Engineering", t: "Inspector daily reports from photos & notes", tier: "strategic", p: "vision", s: "internal", a: "new", v: 3, f: 3, r: 2, e: 2, dur: 2, one: [10000, 25000], ann: [8000, 20000], pre: ["f-assist"], st: "review",
+    x: "Draft construction inspector daily reports from photos, voice notes and the schedule.", kpi: "Daily report time down 40%.", flags: ["Inspector signs every report; it may become a claims record."] },
+
+  { i: "pd-asb", d: "Planning & Design Engineering", t: "As-built & record drawing digitization to GIS", tier: "strategic", p: "document", s: "sensitive", a: "new", v: 5, f: 3, r: 2, e: 3, dur: 4, one: [40000, 120000], ann: [5000, 15000], pre: ["f-data"], st: "in",
+    x: "Extract titles, dates, pipe sizes and materials from scanned as-builts and link each sheet to GIS assets.", kpi: "Share of record drawings indexed and linked to GIS.", flags: ["Infrastructure drawings are security-sensitive. Process them only in a District-controlled tenant."] },
+  { i: "pd-std", d: "Planning & Design Engineering", t: "Design standards & master spec assistant", tier: "strategic", p: "assistant", s: "internal", a: "new", v: 3, f: 3, r: 2, e: 2, dur: 2, one: [10000, 25000], ann: [5000, 10000], pre: ["f-assist", "f-data"], st: "review",
+    x: "Engineers and consultants query District design standards and master specs, and it flags outdated sections.", kpi: "Fewer standards-related review comments.", flags: ["The standards library must be versioned."] },
+  { i: "pd-hyd", d: "Planning & Design Engineering", t: "Hydraulic model calibration & growth scenarios", tier: "longterm", p: "optimization", s: "internal", a: "new", v: 4, f: 2, r: 2, e: 4, dur: 4, one: [40000, 100000], ann: [8000, 20000], pre: ["f-plat"], st: "review",
+    x: "Use ML to speed calibration of the collection-system hydraulic model against flow monitoring and run growth and climate scenarios.", kpi: "Calibration time halved; master plan scenarios refreshed.", flags: [] },
+
+  { i: "pe-chk", d: "Permitting & Source Control", t: "Permit & plan submittal completeness pre-check", tier: "strategic", p: "document", s: "internal", a: "new", v: 4, f: 3, r: 2, e: 3, dur: 3, one: [15000, 35000], ann: [6000, 12000], pre: ["f-gov"], st: "in",
+    x: "Check connection permits, developer plans and industrial discharge applications for missing items before staff review.", kpi: "Resubmittal rate for incomplete applications down 30%.", flags: ["Supplements reviewers; no applicant is ever auto-denied."] },
+  { i: "pe-iu", d: "Permitting & Source Control", t: "Industrial user self-monitoring report review", tier: "strategic", p: "document", s: "sensitive", a: "new", v: 4, f: 3, r: 3, e: 3, dur: 3, one: [15000, 35000], ann: [6000, 12000], pre: ["f-gov", "f-data"], st: "review",
+    x: "Extract results from pretreatment self-monitoring reports, compare them with local limits and flag possible violations for inspectors.", kpi: "Report review time down 40%; no missed violations.", flags: ["Enforcement decisions stay with inspectors."] },
+
+  { i: "la-qc", d: "Laboratory", t: "Lab result anomaly flagging before QA/QC sign-off", tier: "quick", p: "predictive", s: "internal", a: "new", v: 4, f: 3, r: 2, e: 2, dur: 2, one: [10000, 20000], ann: [4000, 8000], pre: ["f-gov"], st: "in",
+    x: "Flag out-of-pattern results, holding-time risks and QC failures in LIMS before analyst sign-off.", kpi: "QA review time down 25%; fewer re-runs.", flags: ["Lab staff keep final QA authority.", "Confirm that the LIMS vendor offers an API."] },
+  { i: "la-coc", d: "Laboratory", t: "Chain-of-custody & bench sheet digitization", tier: "quick", p: "document", s: "internal", a: "new", v: 3, f: 4, r: 1, e: 2, dur: 2, one: [8000, 18000], ann: [3000, 7000], pre: ["f-gov"], st: "review",
+    x: "Read handwritten chain-of-custody forms and bench sheets into LIMS for analyst verification.", kpi: "Transcription time and errors down.", flags: [] },
+
+  { i: "rc-permit", d: "Regulatory Compliance", t: "Permit obligation extraction & compliance calendar", tier: "quick", p: "document", s: "internal", a: "existing", v: 4, f: 4, r: 2, e: 2, dur: 2, one: [5000, 15000], ann: [2000, 6000], pre: ["f-assist"], st: "in",
+    x: "Pull every requirement, limit and deadline out of NPDES, biosolids and air permits into a tracked compliance calendar.", kpi: "Every permit condition has an owner and due date.", flags: ["Compliance staff verify every extracted condition against the permit."] },
+  { i: "rc-watch", d: "Regulatory Compliance", t: "Regulatory change monitoring (PFAS, nutrients, biosolids)", tier: "quick", p: "assistant", s: "internal", a: "new", v: 4, f: 4, r: 1, e: 1, dur: 2, one: [3000, 8000], ann: [5000, 12000], pre: ["f-gov"], st: "in",
+    x: "Scan federal and state registers, regional board agendas and trade associations for changes that affect District permits, and summarize them weekly.", kpi: "No surprises: changes reviewed within two weeks of publication.", flags: ["Must not be the only compliance monitoring method."] },
+  { i: "rc-dmr", d: "Regulatory Compliance", t: "DMR & annual report drafts with data lineage", tier: "strategic", p: "document", s: "sensitive", a: "new", v: 5, f: 3, r: 4, e: 3, dur: 3, one: [20000, 45000], ann: [6000, 12000], pre: ["f-plat"], st: "review",
+    x: "Assemble DMR and annual report drafts from validated LIMS and SCADA data, with every value traced to its source.", kpi: "Report prep time down 40% with full traceability.", flags: ["The signatory certifies under penalty of law. Every number must trace to source."] },
+  { i: "rc-early", d: "Regulatory Compliance", t: "Effluent compliance early warning", tier: "longterm", p: "predictive", s: "ot", a: "new", v: 5, f: 2, r: 3, e: 4, dur: 3, one: [30000, 70000], ann: [10000, 20000], pre: ["f-ot", "f-plat"], st: "review",
+    x: "Forecast likely exceedances from influent, process and lab trends so operators can intervene early.", kpi: "Exceedance warnings at least 24 hours ahead.", flags: ["Validate against historical exceedance events before trusting alerts."] },
+
+  { i: "fi-ap", d: "Finance & Procurement", t: "Invoice capture & AP coding", tier: "quick", p: "document", s: "internal", a: "new", v: 3, f: 4, r: 2, e: 2, dur: 2, one: [10000, 25000], ann: [8000, 15000], pre: ["f-gov"], st: "in",
+    x: "Read vendor invoices, match them to POs and suggest GL coding for AP staff approval.", kpi: "Invoice processing time down 50%.", flags: ["Often available as an ERP add-on. Check before buying separately."] },
+  { i: "fi-var", d: "Finance & Procurement", t: "Budget variance narrative drafts", tier: "quick", p: "assistant", s: "internal", a: "existing", v: 3, f: 4, r: 1, e: 1, dur: 1, one: [2000, 6000], ann: [0, 3000], pre: ["f-assist"], st: "review",
+    x: "Draft monthly variance commentary from GL exports for finance review.", kpi: "Monthly close narrative time down 50%.", flags: [] },
+  { i: "pr-sol", d: "Finance & Procurement", t: "Solicitation & scope-of-work drafting", tier: "quick", p: "assistant", s: "internal", a: "existing", v: 3, f: 4, r: 2, e: 1, dur: 1, one: [3000, 8000], ann: [0, 3000], pre: ["f-assist"], st: "in",
+    x: "Draft RFPs, RFQs and scopes from approved templates and staff input.", kpi: "Solicitation drafting time down 40%.", flags: ["Procurement and legal review all solicitation language."] },
+  { i: "pr-con", d: "Finance & Procurement", t: "Contract obligation & renewal tracking", tier: "quick", p: "document", s: "internal", a: "new", v: 3, f: 4, r: 2, e: 2, dur: 2, one: [8000, 18000], ann: [4000, 8000], pre: ["f-gov"], st: "review",
+    x: "Extract key dates, insurance requirements, obligations and renewal terms from executed contracts.", kpi: "No missed renewals or insurance lapses.", flags: [] },
+  { i: "fi-rate", d: "Finance & Procurement", t: "Rate & capital financing scenario assistant", tier: "longterm", p: "optimization", s: "public", a: "new", v: 4, f: 2, r: 4, e: 4, dur: 3, one: [30000, 70000], ann: [8000, 15000], pre: ["f-plat"], st: "review",
+    x: "Explore rate and financing scenarios against the CIP and O&M projections.", kpi: "Scenario turnaround in hours instead of weeks.", flags: ["Outputs reach the Board and the public. They need independent validation and must follow rate-setting procedures."] },
+
+  { i: "ad-board", d: "Administration", t: "Board packet & minutes drafting", tier: "quick", p: "assistant", s: "public", a: "existing", v: 4, f: 4, r: 3, e: 2, dur: 2, one: [5000, 12000], ann: [3000, 8000], pre: ["f-gov", "f-rec"], st: "in",
+    x: "Draft staff report shells, agenda packet summaries and draft minutes from meeting recordings for Clerk review.", kpi: "Minutes ready for review within two days.", flags: ["Clerk approves all minutes; open-meeting rules apply; disclose AI assistance per policy."] },
+  { i: "ad-lang", d: "Administration", t: "Multilingual public notices & outreach", tier: "quick", p: "assistant", s: "public", a: "existing", v: 3, f: 4, r: 3, e: 1, dur: 1, one: [2000, 6000], ann: [2000, 6000], pre: ["f-gov"], st: "in",
+    x: "Translate construction notices, outreach and web content into the community's main languages.", kpi: "All construction notices available in the top languages.", flags: ["Qualified human review for legally required notices."] },
+  { i: "ad-pra", d: "Administration", t: "Public records search & redaction assist", tier: "strategic", p: "document", s: "sensitive", a: "new", v: 4, f: 3, r: 4, e: 3, dur: 3, one: [15000, 35000], ann: [10000, 20000], pre: ["f-data", "f-rec"], st: "review",
+    x: "Find responsive records faster and suggest redactions (personal information, security-sensitive infrastructure) for staff decision.", kpi: "Average PRA response time down 30%.", flags: ["Staff make every redaction and exemption decision."] },
+  { i: "ad-cx", d: "Administration", t: "Public website assistant (services, backups, permits)", tier: "strategic", p: "assistant", s: "public", a: "new", v: 4, f: 3, r: 4, e: 3, dur: 3, one: [15000, 40000], ann: [10000, 25000], pre: ["f-gov", "it-know"], st: "review",
+    x: "Answers common questions from approved District content and routes service requests.", kpi: "Call volume for routine questions down 20%.", flags: ["Labeled as AI; sewer backups and emergencies go to a person immediately.", "Answers only from approved content."] },
+  { i: "ad-hr", d: "Administration", t: "HR policy Q&A & job description drafting", tier: "quick", p: "assistant", s: "internal", a: "existing", v: 3, f: 4, r: 3, e: 1, dur: 1, one: [2000, 5000], ann: [0, 3000], pre: ["f-gov"], st: "review",
+    x: "Help HR staff answer benefits and policy questions and draft job descriptions and announcements.", kpi: "HR inquiry response time down.", flags: ["Out of bounds: screening, ranking or scoring candidates or employees."] },
+  { i: "ad-safety", d: "Administration", t: "Safety incident & near-miss trend analysis", tier: "strategic", p: "predictive", s: "sensitive", a: "new", v: 4, f: 3, r: 2, e: 2, dur: 2, one: [8000, 20000], ann: [3000, 8000], pre: ["f-plat"], st: "review",
+    x: "Find patterns in incident and near-miss reports (confined space, traffic control, chemical handling) to target training.", kpi: "Recordable incident rate trending down.", flags: ["Personnel information is handled under HR confidentiality rules."] }
+];
+
+const HORIZON = [
+  { ring: "Adopt now", color: "var(--good)", blurb: "Mature, low-risk, and peers are using it.", items: [
+    { t: "Secure enterprise assistants", p: "Copilot Chat with enterprise data protection is in GCC, and Microsoft added Researcher and Analyst agents for government tenants in April 2026. A sanctioned tool is the best defense against staff pasting District data into consumer apps.", ev: [["Nextgov: Copilot for government clouds", "https://www.nextgov.com/acquisition/2025/12/microsoft-makes-copilot-available-secure-cloud-customers/409912"]], ids: ["f-assist", "it-know"] },
+    { t: "AI-assisted CCTV coding (PACP)", p: "The most proven AI use in collections. Vendors pre-code footage and certified staff review it. Houston reports $1M+ in savings under a consent decree, and Phoenix ran a five-vendor bake-off before choosing.", ev: [["SewerAI AutoCode (vendor-reported)", "https://www.sewerai.com/products/autocode"], ["PipeLogix + PipeAId", "https://www.wateronline.com/doc/pipelogix-partners-with-pipeaid-to-modernize-and-automate-pipeline-inspection-0001"]], ids: ["cc-cctv", "cc-cof"] },
+    { t: "Document AI for paper-heavy work", p: "Invoices, permits, as-builts, chain-of-custody forms and contracts. Reading documents is where today's models are most reliable, and every output has a human check point.", ev: [], ids: ["pd-asb", "rc-permit", "fi-ap", "la-coc"] }
+  ]},
+  { ring: "Pilot", color: "var(--accent)", blurb: "Strong evidence elsewhere. Prove it on District data.", items: [
+    { t: "AI aeration optimization, advisory mode", p: "The best evidence yet: a July 2026 NBER working paper across French plants found 5.4% lower electricity use, 8.2% lower energy spend and better effluent quality under AI aeration control. Vendor case studies claim up to 30% aeration savings.", ev: [["NBER working paper (2026)", "https://conference.nber.org/conf_papers/f240807.pdf"], ["Xylem / Cuxhaven case study (vendor)", "https://www.xylem.com/en-ge/making-waves/water-utilities-news/wastewater-treatment-plant-uses-ai-to-reduce-aeration-energy-use-by-30-percent/"]], ids: ["po-aer", "po-sensor"] },
+    { t: "Wet-weather overflow prediction", p: "Unitywater predicts sewer overflows up to six hours ahead from radar rainfall, and WRF Project 5297 is writing smart-sewer guidance for utilities of any size. This fits a district that spans a third of the county.", ev: [["Unitywater / GHD (AWA)", "https://watersource.awa.asn.au/technology/innovation/new-machine-learning-tool-predicts-sewage-overflows/"], ["WRF Project 5297", "https://www.waterrf.org/node/3345711"]], ids: ["cc-sso", "cc-ii"] },
+    { t: "Agents with a human approval step", p: "Assistants now carry out multi-step tasks, not just answer questions. Start with back-office workflows where every action is reversible and logged. NIST launched an AI Agent Standards Initiative in February 2026, and Berkeley's CLTC published an agentic risk profile mapped to the AI RMF.", ev: [["NIST AI Agent Standards Initiative (CSA note)", "https://labs.cloudsecurityalliance.org/research/csa-research-note-nist-ai-agent-standards-regulatory-framewo/"], ["Berkeley CLTC agentic AI profile", "https://live-cltc.pantheon.berkeley.edu/agentic-ai"]], ids: ["it-agent"] }
+  ]},
+  { ring: "Watch", color: "var(--warn)", blurb: "Promising. Let others go first and revisit in a year.", items: [
+    { t: "Plant digital twins", p: "Full-scale demonstrations report 15–30% aeration savings, and research now targets safety constraints, such as avoiding N₂O spikes from under-aeration. WRF's 31-month AI-for-treatment project with WSSC Water started in March 2026.", ev: [["WRF / Stantec announcement", "https://www.wateronline.com/doc/stantec-partners-with-wssc-water-and-prince-william-water-on-new-water-research-foundation-ai-initiative-0001"], ["Safety-constrained twin preprint", "https://arxiv.org/pdf/2605.19826"]], ids: ["po-twin"] },
+    { t: "NIST AI profile for critical infrastructure", p: "NIST released a concept note for an AI RMF profile on critical infrastructure in April 2026. When it's final, it is likely to become the yardstick for utility AI programs and grants.", ev: [["NIST AI RMF", "https://www.nist.gov/itl/ai-risk-management-framework"]], ids: ["f-gov"] }
+  ]},
+  { ring: "Hold", color: "var(--gate)", blurb: "Not this window. The risk outweighs the benefit for now.", items: [
+    { t: "Autonomous control of OT", p: "In July 2026, CISA warned water and wastewater utilities of active targeting of internet-exposed PLCs. AI that writes to control systems widens the attack surface. Keep models advisory, with operators in charge.", ev: [["Federal News Network on CISA guidance", "https://federalnewsnetwork.com/cybersecurity/2026/07/cisa-guidance-targets-water-sector-security-open-source-ai-and-more/"]], ids: ["po-auto"] },
+    { t: "Unmanaged consumer AI for District work", p: "Prompts and outputs used for public business are likely public records, and reporters have obtained city workers' ChatGPT logs through records requests. Without a sanctioned tool, the District can't retain or produce those records.", ev: [["ABA: AI under public records laws (Fall 2026)", "https://www.americanbar.org/groups/communications_law/resources/magazine/2026-fall/ai-accessible-under-public-records-laws-foia/"], ["CSDA: Public Records Act meets AI", "https://www.csda.net/blogs/kristin-withrow1/2026/05/11/public-records-act-meets-ai"], ["UNC SOG: AI and public records", "https://canons.sog.unc.edu/blog/2026/03/11/the-intersection-of-artificial-intelligence-and-the-public-records-act/"]], ids: ["f-rec", "f-assist"] }
+  ]}
+];
+
+const CHECKLIST = [
+  ["Business problem and owner are named", "Each pilot has a department owner, a measurable KPI and a stop/continue date."],
+  ["Risk screening is done", "Data sensitivity, public impact, OT dependency and human-review points are documented."],
+  ["Cybersecurity and vendor review path exists", "Security review, access controls, AI contract terms and data handling are part of the plan."],
+  ["Procurement path is realistic", "Purchasing method, cooperative contracts, lead time and approval thresholds are understood."],
+  ["Total cost of ownership is visible", "One-time, recurring, staff time, training and contingency are all in the numbers, and so is year three."],
+  ["Governance and human review are defined", "Staff know when AI may be used, when it may not, and who approves higher-risk uses."],
+  ["Training and support are planned", "Users have guidance, champions, office hours and a way to report problems."],
+  ["Records and transparency are covered", "Retention for AI records is set, and the AI use register is published."]
+];
+
+const SIZE = {
+  S: { tier: "quick", v: 3, f: 4, r: 2, e: 2, dur: 2, one: [5000, 15000], ann: [3000, 8000] },
+  M: { tier: "strategic", v: 4, f: 3, r: 2, e: 3, dur: 3, one: [20000, 50000], ann: [8000, 20000] },
+  L: { tier: "longterm", v: 4, f: 2, r: 3, e: 4, dur: 4, one: [50000, 120000], ann: [15000, 35000] }
+};
+
+// ─── State ───────────────────────────────────────────────────────────────────
+const STORE_KEY = "ww-ai-roadmap-v3";
+function defaultState() {
+  return {
+    v: 3,
+    scenario: "Baseline draft",
+    items: SEED.map(s => ({
+      id: s.i, dept: s.d, title: s.t, desc: s.x, tier: s.tier, pattern: s.p, sens: s.s, acq: s.a,
+      v: s.v, f: s.f, r: s.r, e: s.e, dur: s.dur, one: s.one.slice(), ann: s.ann.slice(), pre: s.pre.slice(),
+      boost: s.boost || null, kpi: s.kpi, flags: s.flags.slice(), status: s.st, basis: "Planning estimate", notes: "", pin: null, custom: false
+    })),
+    readiness: { gov: 40, cyber: 55, data: 35, staff: 40, procurement: 50, budget: 50 },
+    assume: { start: "2027-01", fy: 7, lead: 1, cap: 5, stance: "standard", review: "Required for all AI outputs used in District work" },
+    budget: { env: 500000, cont: 15, gov: 30000, train: 40000, staff: 120000 },
+    weights: { v: 3, f: 2, r: 1.5, e: 1 },
+    checks: CHECKLIST.map(() => false)
+  };
+}
+let state = loadState();
+const ui = { tab: "overview", open: new Set(), filters: { q: "", dept: "", status: "", tier: "" }, groupBy: "tier" };
+let model = null;
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) { const s = JSON.parse(raw); if (s && s.v === 3 && Array.isArray(s.items)) return Object.assign(defaultState(), s); }
+  } catch (e) { /* storage unavailable */ }
+  return defaultState();
+}
+let saveTimer = null;
+function save() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ } }, 250);
+}
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
+const esc = t => String(t ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const byId = id => state.items.find(x => x.id === id);
+const mid = r => (r[0] + r[1]) / 2;
+const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function money(n) { n = Math.round(n || 0); if (Math.abs(n) >= 1e6) return "$" + (n / 1e6).toFixed(n >= 1e7 ? 1 : 2).replace(/\.?0+$/, "") + "M"; if (Math.abs(n) >= 1e3) return "$" + Math.round(n / 1e3) + "K"; return "$" + n; }
+function range(r) { return money(r[0]) + "–" + money(r[1]); }
+function qDate(i) { const [y, m] = state.assume.start.split("-").map(Number); const t = (m - 1) + 3 * i; return { y: y + Math.floor(t / 12), m: (t % 12) + 1 }; }
+function qLabel(i) { if (i >= H) return qDate(H).y + "+"; const d = qDate(i); return MON[d.m - 1] + " '" + String(d.y).slice(2); }
+function qLong(i) { const d = qDate(i); return MON[d.m - 1] + " " + d.y; }
+function fyOf(i) { const d = qDate(i), s = Number(state.assume.fy); if (s === 1) return { key: d.y, label: "FY" + d.y }; const end = d.m >= s ? d.y + 1 : d.y; return { key: end, label: "FY" + String(end - 1).slice(2) + "/" + String(end).slice(2) }; }
+function windowEnd() { return windowLabel().split(" – ")[1]; }
+function windowLabel() { const e = qDate(H - 1); return qLong(0) + " – " + MON[(e.m + 1) % 12] + " " + (e.m + 2 > 12 ? e.y + 1 : e.y); }
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => { t.hidden = true; }, 2600); }
+function score(it) {
+  const w = state.weights;
+  const raw = w.v * it.v + w.f * it.f - w.r * it.r - w.e * it.e;
+  const min = w.v + w.f - 5 * w.r - 5 * w.e, max = 5 * w.v + 5 * w.f - w.r - w.e;
+  return max === min ? 50 : Math.round(100 * (raw - min) / (max - min));
+}
+function slotLoad(it) { return it.e <= 2 ? 0.5 : it.e === 3 ? 1 : 1.5; }
+function areaLabel(k) { return AREAS.find(a => a.k === k).label; }
+
+function gatesFor(it) {
+  if (it.tier === "foundation") return {};
+  const g = { gov: 40 };
+  const up = (k, v) => { g[k] = Math.max(g[k] || 0, v); };
+  const strict = state.assume.stance === "strict" ? 10 : 0;
+  if (it.sens === "public") up("gov", 65);
+  if (it.sens === "sensitive") { up("gov", 60 + strict); up("cyber", 60 + strict); }
+  if (it.sens === "ot") { up("cyber", 70 + strict); up("data", 60); }
+  if (it.pattern === "predictive" || it.pattern === "optimization") up("data", 55);
+  if (it.pattern === "agent") { up("gov", 70); up("cyber", 65); }
+  if (it.tier !== "quick") up("staff", 45);
+  return g;
+}
+
+// ─── Scheduling engine ───────────────────────────────────────────────────────
+function compute() {
+  const items = state.items;
+  const inScope = items.filter(x => x.status === "in");
+  const sched = {};
+  const leadQ = Number(state.assume.lead) + (state.readiness.procurement < 50 ? 1 : 0);
+  // Fiscal-year boundary quarters for the budget gate
+  const nextFyQ = (() => { const k0 = fyOf(0).key; for (let q = 1; q < MAXQ; q++) if (fyOf(q).key !== k0) return q; return 0; })();
+
+  const constraintsBase = (it) => {
+    const c = [];
+    for (const p of it.pre) {
+      const pi = byId(p);
+      if (!pi) continue;
+      if (pi.status !== "in") return { blocked: `Needs “${pi.title}”, which is not in scope` };
+      const ps = sched[p];
+      if (!ps) return null; // not resolved yet
+      if (ps.blocked) return { blocked: `Waits on “${pi.title}”, which is blocked` };
+      c.push({ q: ps.end + 1, text: `After “${pi.title}” finishes`, key: "pre:" + p });
+    }
+    if (it.acq === "new" && leadQ > 0) c.push({ q: leadQ, text: `Procurement lead time (${leadQ} qtr)`, key: "lead" });
+    if (state.readiness.budget < 50 && it.one[1] >= 100000 && nextFyQ > 0) c.push({ q: nextFyQ, text: "Waits for next budget cycle (budget alignment under 50)", key: "budget" });
+    return { c };
+  };
+
+  // 1) Foundations: no capacity limit, no gates
+  const founds = inScope.filter(x => x.tier === "foundation");
+  let guard = 0;
+  while (founds.some(f => !sched[f.id]) && guard++ < 50) {
+    for (const f of founds) {
+      if (sched[f.id]) continue;
+      const base = constraintsBase(f);
+      if (base === null) continue;
+      if (base.blocked) { sched[f.id] = { blocked: base.blocked, reasons: [] }; continue; }
+      const earliest = Math.max(0, ...base.c.map(c => c.q));
+      const start = f.pin != null ? f.pin : earliest;
+      sched[f.id] = { start, end: start + f.dur - 1, earliest, reasons: base.c, wait: start - 0 };
+    }
+  }
+  founds.forEach(f => { if (!sched[f.id]) sched[f.id] = { blocked: "Circular prerequisite", reasons: [] }; });
+
+  // 2) Projected readiness by quarter
+  const R = [];
+  for (let q = 0; q < MAXQ; q++) {
+    const row = Object.assign({}, state.readiness);
+    for (const f of founds) {
+      const s = sched[f.id];
+      if (s.blocked || !f.boost || s.end >= q) continue;
+      for (const k in f.boost) row[k] = Math.min(100, row[k] + f.boost[k]);
+    }
+    R.push(row);
+  }
+
+  // 3) Use cases in priority order, competing for capacity
+  const usage = new Array(MAXQ + 12).fill(0);
+  const cap = Number(state.assume.cap);
+  let pending = inScope.filter(x => x.tier !== "foundation").sort((a, b) => score(b) - score(a));
+  let progress = true;
+  while (pending.length && progress) {
+    progress = false;
+    for (let i = 0; i < pending.length; i++) {
+      const it = pending[i];
+      const base = constraintsBase(it);
+      if (base === null) continue;
+      pending.splice(i, 1); progress = true;
+      if (base.blocked) { sched[it.id] = { blocked: base.blocked, reasons: [] }; break; }
+      const c = base.c.slice();
+      const g = gatesFor(it);
+      let gq = -1;
+      for (let q = 0; q < MAXQ; q++) { if (Object.keys(g).every(k => R[q][k] >= g[k])) { gq = q; break; } }
+      if (gq < 0) {
+        const miss = Object.keys(g).filter(k => R[MAXQ - 1][k] < g[k]).map(k => `${areaLabel(k)} needs ${g[k]}, projects to ${R[MAXQ - 1][k]}`);
+        sched[it.id] = { blocked: "Readiness gate never met: " + miss.join("; "), reasons: [] };
+        break;
+      }
+      if (gq > 0) {
+        const lagging = Object.keys(g).filter(k => R[gq - 1][k] < g[k]);
+        c.push({ q: gq, text: lagging.map(k => `${areaLabel(k)} ${R[0][k]} → needs ${g[k]}`).join("; "), key: "gate:" + lagging.join(",") });
+      }
+      const earliest = Math.max(0, ...c.map(x => x.q));
+      let start;
+      const load = slotLoad(it);
+      if (it.pin != null) start = it.pin;
+      else {
+        start = earliest;
+        const fits = s => { for (let q = s; q < s + it.dur; q++) if (usage[q] + load > cap + 1e-9) return false; return true; };
+        while (start < MAXQ && !fits(start)) start++;
+        if (start > earliest) c.push({ q: start, text: `Queued for team capacity (${start - earliest} qtr)`, key: "capacity" });
+      }
+      for (let q = start; q < start + it.dur; q++) usage[q] += load;
+      const s = { start, end: start + it.dur - 1, earliest, reasons: c, pinnedEarly: it.pin != null && it.pin < earliest };
+      sched[it.id] = s;
+      break;
+    }
+  }
+  pending.forEach(it => { sched[it.id] = { blocked: "Circular prerequisite", reasons: [] }; });
+
+  // 4) Costs per quarter within the window
+  const qc = Array.from({ length: H }, () => ({ one: [0, 0], rec: [0, 0], prog: [0, 0] }));
+  const perItem = {};
+  for (const it of inScope) {
+    const s = sched[it.id];
+    const c = { one: [0, 0], rec: [0, 0] };
+    if (s && !s.blocked && s.start < H) {
+      const qs = [];
+      for (let q = s.start; q <= Math.min(s.end, H - 1); q++) qs.push(q);
+      const share = 1 / it.dur;
+      qs.forEach(q => { for (let k = 0; k < 2; k++) { const v = it.one[k] * share; qc[q].one[k] += v; c.one[k] += v; } });
+      for (let q = s.start; q < H; q++) for (let k = 0; k < 2; k++) { const v = it.ann[k] / 4; qc[q].rec[k] += v; c.rec[k] += v; }
+    }
+    perItem[it.id] = { lo: c.one[0] + c.rec[0], hi: c.one[1] + c.rec[1] };
+  }
+  const B = state.budget;
+  const progQ = (Number(B.gov) + Number(B.train) + Number(B.staff)) / H;
+  const cont = Number(B.cont) / 100;
+  qc.forEach(x => {
+    for (let k = 0; k < 2; k++) {
+      x.prog[k] = progQ + (x.one[k] + x.rec[k] + progQ) * cont;
+      x.total = x.total || [0, 0];
+      x.total[k] = x.one[k] + x.rec[k] + x.prog[k];
+    }
+  });
+  const total = [qc.reduce((a, x) => a + x.total[0], 0), qc.reduce((a, x) => a + x.total[1], 0)];
+  const runRate = [0, 0];
+  inScope.forEach(it => { const s = sched[it.id]; if (s && !s.blocked && s.start < H) { runRate[0] += it.ann[0]; runRate[1] += it.ann[1]; } });
+  const envelopeWindow = Number(B.env) * H / 4;
+
+  const avgNow = Math.round(AREAS.reduce((a, x) => a + state.readiness[x.k], 0) / AREAS.length);
+  const avgEnd = Math.round(AREAS.reduce((a, x) => a + R[H - 1][x.k], 0) / AREAS.length);
+  model = { sched, R, qc, perItem, total, runRate, envelopeWindow, avgNow, avgEnd, inScope, leadQ };
+  return model;
+}
+
+function postureFor(avg) {
+  if (avg < 50) return { name: "Foundation first", tag: "bad", text: "Put policy, data and security foundations in place before anything touches sensitive data or plant systems. Run only low-risk quick wins in parallel." };
+  if (avg < 75) return { name: "Pilot carefully", tag: "warn", text: "Run tightly scoped pilots with clear KPIs while the weakest readiness areas get stronger. Keep plant and collections models advisory." };
+  return { name: "Scale selectively", tag: "good", text: "Expand the pilots that proved their value, with monitoring, budget controls and annual reviews of each model." };
+}
+function startText(id) {
+  const s = model.sched[id];
+  if (!s) return "—";
+  if (s.blocked) return "Blocked";
+  return s.start >= H ? qLabel(H) : qLabel(s.start);
+}
+
+// ─── Rendering: shared ───────────────────────────────────────────────────────
+function renderAll() {
+  compute();
+  const e = qDate(H - 1);
+  $("#mastYears").textContent = qDate(0).y + "–" + (e.m + 2 > 12 ? e.y + 1 : e.y);
+  $("#tbWindow").textContent = windowLabel();
+  ({ overview: renderOverview, portfolio: renderPortfolio, roadmap: renderRoadmap, readiness: renderReadiness, budget: renderBudget, horizon: renderHorizon, brief: renderBrief })[ui.tab]();
+  save();
+}
+function setTab(t) {
+  ui.tab = t;
+  $$(".tab").forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab === t)));
+  $$("[data-panel]").forEach(p => { p.hidden = p.dataset.panel !== t; });
+  try { history.replaceState(null, "", "#" + t); } catch (e) { /* sandboxed */ }
+  renderAll();
+}
+
+// ─── Overview ────────────────────────────────────────────────────────────────
+function renderOverview() {
+  const m = model, p = postureFor(m.avgNow), pEnd = postureFor(m.avgEnd);
+  const lowest = AREAS.slice().sort((a, b) => state.readiness[a.k] - state.readiness[b.k])[0];
+  $("#postureBox").innerHTML = `
+    <div>
+      <div class="eyebrow">Recommended posture today</div>
+      <h2>${p.name}</h2>
+      <p>${p.text} The weakest area is <strong>${esc(lowest.label.toLowerCase())}</strong> (${state.readiness[lowest.k]}).${pEnd.name !== p.name ? ` If the foundations land on schedule, the District reaches <strong>${pEnd.name.toLowerCase()}</strong> by ${windowEnd()}.` : ""}</p>
+    </div>
+    <div class="ladder" aria-label="Average readiness now and projected">
+      <div class="ladder-step"><span>Today</span><div class="ladder-track"><div class="ladder-fill" style="width:${m.avgNow}%"></div><div class="ladder-mark" style="left:50%"></div><div class="ladder-mark" style="left:75%"></div></div><span>${m.avgNow}</span></div>
+      <div class="ladder-step"><span>${qLabel(3)}</span><div class="ladder-track"><div class="ladder-fill" style="width:${avgAt(3)}%"></div><div class="ladder-mark" style="left:50%"></div><div class="ladder-mark" style="left:75%"></div></div><span>${avgAt(3)}</span></div>
+      <div class="ladder-step"><span>${qLabel(H - 1)}</span><div class="ladder-track"><div class="ladder-fill" style="width:${m.avgEnd}%"></div><div class="ladder-mark" style="left:50%"></div><div class="ladder-mark" style="left:75%"></div></div><span>${m.avgEnd}</span></div>
+      <div class="small" style="opacity:.75;font-family:var(--f-data);font-size:.7rem">Average readiness. Marks at 50 (pilot) and 75 (scale).</div>
+    </div>`;
+
+  const uc = m.inScope.filter(x => x.tier !== "foundation");
+  const inWin = uc.filter(x => { const s = m.sched[x.id]; return s && !s.blocked && s.start < H; });
+  const over = m.total[1] > m.envelopeWindow;
+  $("#statTiles").innerHTML = `
+    <div class="card stat"><span class="eyebrow">24-month estimate</span><span class="val">${range(m.total)}</span><span class="sub">Includes ${state.budget.cont}% contingency and program costs. Envelope ${money(m.envelopeWindow)}: <span class="chip ${over ? (m.total[0] > m.envelopeWindow ? "bad" : "warn") : "good"}">${m.total[0] > m.envelopeWindow ? "over" : over ? "high end over" : "within"}</span></span></div>
+    <div class="card stat"><span class="eyebrow">Use cases in the window</span><span class="val">${inWin.length} <span class="muted" style="font-size:1.1rem">of ${uc.length}</span></span><span class="sub">${uc.length - inWin.length} pushed past ${windowEnd()} or blocked, plus ${m.inScope.length - uc.length} foundations</span></div>
+    <div class="card stat"><span class="eyebrow">Readiness</span><span class="val">${m.avgNow} → ${m.avgEnd}</span><span class="sub">Average today, and projected at the end of the window if foundations deliver</span></div>
+    <div class="card stat"><span class="eyebrow">Recurring cost entering ${qDate(H).y}</span><span class="val">${range(m.runRate)}</span><span class="sub">Per year, before contingency. This is the commitment that outlives the plan.</span></div>`;
+
+  const soon = m.inScope.filter(x => { const s = m.sched[x.id]; return s && !s.blocked && s.start <= 1; }).sort((a, b) => m.sched[a.id].start - m.sched[b.id].start || TIER_ORDER.indexOf(a.tier) - TIER_ORDER.indexOf(b.tier));
+  $("#nextUp").innerHTML = soon.length ? soon.map(x => `<div><span class="q">${qLabel(m.sched[x.id].start)}</span><div><strong>${esc(x.title)}</strong> <span class="chip tier ${x.tier}">${TIERS[x.tier]}</span><div class="small muted">${esc(x.dept)} · ${esc(x.kpi)}</div></div></div>`).join("") : `<p class="muted">Nothing can start in the first two quarters. Check procurement lead time and readiness.</p>`;
+
+  // Blockers: binding reasons across delayed and blocked items
+  const counts = {};
+  uc.forEach(x => {
+    const s = m.sched[x.id];
+    if (!s) return;
+    if (s.blocked) { const k = "blocked"; (counts[k] = counts[k] || { text: "Blocked outright (prerequisite out of scope or gate never met)", ids: [] }).ids.push(x.id); return; }
+    if (s.start === 0) return;
+    s.reasons.filter(r => r.q === s.earliest || r.key === "capacity").forEach(r => {
+      let k = r.key, text = r.text;
+      if (k.startsWith("gate:")) { const areas = k.slice(5).split(","); areas.forEach(a => { const kk = "gate:" + a; (counts[kk] = counts[kk] || { text: `${areaLabel(a)} (today ${state.readiness[a]})`, ids: [] }).ids.push(x.id); }); return; }
+      if (k.startsWith("pre:")) text = "Waiting on " + byId(k.slice(4)).title;
+      if (k === "lead") text = "Procurement lead time";
+      (counts[k] = counts[k] || { text, ids: [] }).ids.push(x.id);
+    });
+  });
+  const top = Object.values(counts).sort((a, b) => b.ids.length - a.ids.length).slice(0, 5);
+  $("#blockers").innerHTML = top.length ? `<div class="list-q">${top.map(b => `<div><span class="q">${b.ids.length} item${b.ids.length > 1 ? "s" : ""}</span><div><strong>${esc(b.text)}</strong><div class="small muted">${b.ids.slice(0, 4).map(id => esc(byId(id).title)).join(" · ")}${b.ids.length > 4 ? " …" : ""}</div></div></div>`).join("")}</div>` : `<p class="muted">Nothing is waiting. Every in-scope use case starts in the first quarter.</p>`;
+
+  const ranked = uc.slice().sort((a, b) => score(b) - score(a)).slice(0, 8);
+  $("#topTable").innerHTML = ranked.map((x, i) => `<tr><td class="num">${i + 1}</td><td><strong>${esc(x.title)}</strong></td><td class="small">${esc(x.dept)}</td><td><span class="chip tier ${x.tier}">${TIERS[x.tier]}</span></td><td class="num">${score(x)}</td><td class="mono small">${startText(x.id)}</td><td class="num">${money(mid([m.perItem[x.id].lo, m.perItem[x.id].hi]))}</td></tr>`).join("");
+}
+function avgAt(q) { return Math.round(AREAS.reduce((a, x) => a + model.R[q][x.k], 0) / AREAS.length); }
+
+// ─── Portfolio ───────────────────────────────────────────────────────────────
+function opt(list, sel) { return list.map(([v, l]) => `<option value="${esc(v)}"${String(v) === String(sel) ? " selected" : ""}>${esc(l)}</option>`).join(""); }
+function scoreSel(it, k) { return `<select class="score" data-k="${k}" data-id="${it.id}" aria-label="${k}">${[1, 2, 3, 4, 5].map(n => `<option${n === it[k] ? " selected" : ""}>${n}</option>`).join("")}</select>`; }
+function renderPortfolio() {
+  const f = ui.filters, q = f.q.trim().toLowerCase();
+  const rows = state.items.filter(x =>
+    (!f.dept || x.dept === f.dept) && (!f.status || x.status === f.status) && (!f.tier || x.tier === f.tier) &&
+    (!q || (x.title + " " + x.desc + " " + x.flags.join(" ") + " " + x.dept).toLowerCase().includes(q))
+  ).sort((a, b) => TIER_ORDER.indexOf(a.tier) === 0 && TIER_ORDER.indexOf(b.tier) !== 0 ? -1 : TIER_ORDER.indexOf(b.tier) === 0 && TIER_ORDER.indexOf(a.tier) !== 0 ? 1 : DEPTS.indexOf(a.dept) - DEPTS.indexOf(b.dept) || score(b) - score(a));
+  const nIn = state.items.filter(x => x.status === "in").length;
+  $("#pfCount").textContent = `Showing ${rows.length} of ${state.items.length} · ${nIn} in scope`;
+  $("#pfBody").innerHTML = rows.map(x => {
+    const s = model.sched[x.id], c = model.perItem[x.id];
+    const open = ui.open.has(x.id);
+    const sc = score(x);
+    let startCell = "—";
+    if (x.status === "in" && s) startCell = s.blocked ? `<span class="chip bad">Blocked</span>` : (s.start >= H ? `<span class="chip warn">${qLabel(H)}</span>` : `<span class="mono">${qLabel(s.start)}</span>`);
+    return `<tr class="${x.status === "out" ? "out" : ""}">
+      <td><button class="expander" data-act="toggle" data-id="${x.id}" aria-expanded="${open}" aria-label="Details for ${esc(x.title)}">${open ? "−" : "+"}</button></td>
+      <td style="min-width:240px"><div class="t">${esc(x.title)}</div><div class="d">${esc(x.dept)}</div>
+        <div class="chips" style="margin-top:4px"><span class="chip">${PATTERNS[x.pattern]}</span>${x.sens !== "internal" ? `<span class="chip ${x.sens}">${SENS[x.sens]}</span>` : ""}${x.custom ? `<span class="chip">Added</span>` : ""}</div></td>
+      <td><select class="mini status-${x.status}" data-f="status" data-id="${x.id}" aria-label="Status">${opt(Object.entries(STATUS), x.status)}</select></td>
+      <td><select class="mini" data-f="tier" data-id="${x.id}" aria-label="Tier">${opt(Object.entries(TIERS), x.tier)}</select></td>
+      <td>${scoreSel(x, "v")}</td><td>${scoreSel(x, "f")}</td><td>${scoreSel(x, "r")}</td><td>${scoreSel(x, "e")}</td>
+      <td><div class="scorebar"><span class="num">${sc}</span><span class="bar"><span style="width:${sc}%"></span></span></div></td>
+      <td class="num">${x.status === "in" ? money(mid([c.lo, c.hi])) : `<span class="muted">${money(mid(x.one) + mid(x.ann) * 1.5)}</span>`}</td>
+      <td>${startCell}</td>
+    </tr>${open ? detailRow(x) : ""}`;
+  }).join("") || `<tr><td colspan="11" class="muted">No use cases match these filters.</td></tr>`;
+}
+function detailRow(x) {
+  const s = model.sched[x.id];
+  const g = gatesFor(x);
+  const pre = x.pre.map(p => byId(p)).filter(Boolean);
+  let sched = "";
+  if (x.status !== "in") sched = `<p class="small muted">Not scheduled. Set the status to “In scope” to place it on the roadmap.</p>`;
+  else if (s.blocked) sched = `<div class="note gate small">${esc(s.blocked)}</div>`;
+  else sched = `<p class="small"><strong>${s.start >= H ? "Starts after the window" : "Runs " + qLabel(s.start) + " – " + qLabel(Math.min(s.end, H - 1)) + (s.end >= H ? " and beyond" : "")}</strong>${s.pinnedEarly ? ` <span class="chip warn">Pinned ahead of its gates</span>` : ""}</p>
+    ${s.reasons.length ? `<ul class="reasons" style="margin-top:6px">${s.reasons.map(r => `<li class="${r.q === Math.max(s.earliest, 0) || r.key === "capacity" ? "bind" : ""}"><span class="q">${r.q >= H ? qLabel(H) : qLabel(r.q)}</span><span>${esc(r.text)}</span></li>`).join("")}</ul>` : `<p class="small muted">No constraints. Starts at the beginning of the window.</p>`}`;
+  return `<tr class="detail"><td colspan="11"><div class="detail-grid">
+    <div style="display:grid;gap:12px;min-width:0">
+      <label class="f">Description<textarea data-f="desc" data-id="${x.id}">${esc(x.desc)}</textarea></label>
+      <label class="f">Success measure (KPI)<input type="text" data-f="kpi" data-id="${x.id}" value="${esc(x.kpi)}"></label>
+      <label class="f">Governance flags and prerequisites (one per line)<textarea data-f="flags" data-id="${x.id}">${esc(x.flags.join("\n"))}</textarea></label>
+      <div class="form-grid">
+        <label class="f">Department<select data-f="dept" data-id="${x.id}">${opt(DEPTS.map(d => [d, d]), x.dept)}</select></label>
+        <label class="f">AI pattern<select data-f="pattern" data-id="${x.id}">${opt(Object.entries(PATTERNS), x.pattern)}</select></label>
+        <label class="f">Data sensitivity<select data-f="sens" data-id="${x.id}">${opt(Object.entries(SENS), x.sens)}</select></label>
+        <label class="f">Acquisition<select data-f="acq" data-id="${x.id}">${opt([["existing", "Existing / in-house"], ["new", "New procurement"]], x.acq)}</select></label>
+      </div>
+    </div>
+    <div style="display:grid;gap:12px;align-content:start;min-width:0">
+      <div><div class="eyebrow">Schedule</div>${sched}</div>
+      <div><div class="eyebrow">Prerequisites</div><div class="chips" style="margin-top:4px">${pre.length ? pre.map(p => `<span class="chip ${p.status === "in" ? "" : "bad"}">${esc(p.title)}${p.status === "in" ? "" : " (not in scope)"}</span>`).join("") : `<span class="small muted">None</span>`}</div></div>
+      <div><div class="eyebrow">Readiness gates</div><div class="chips" style="margin-top:4px">${Object.keys(g).length ? Object.entries(g).map(([k, v]) => `<span class="chip ${state.readiness[k] >= v ? "good" : "warn"}">${esc(areaLabel(k))} ≥ ${v}</span>`).join("") : `<span class="small muted">Foundations aren't gated</span>`}</div></div>
+      <div class="form-grid">
+        <label class="f">Duration (quarters)<select data-f="dur" data-id="${x.id}">${opt([1, 2, 3, 4, 5, 6].map(n => [n, n]), x.dur)}</select></label>
+        <label class="f">Start<select data-f="pin" data-id="${x.id}">${opt([["", "Auto (calculated)"]].concat(Array.from({ length: H }, (_, i) => [i, "Pin to " + qLabel(i)])), x.pin == null ? "" : x.pin)}</select></label>
+      </div>
+      <div class="form-grid">
+        <label class="f">One-time low ($)<input type="number" min="0" step="1000" data-cost="one,0" data-id="${x.id}" value="${x.one[0]}"></label>
+        <label class="f">One-time high ($)<input type="number" min="0" step="1000" data-cost="one,1" data-id="${x.id}" value="${x.one[1]}"></label>
+        <label class="f">Annual low ($/yr)<input type="number" min="0" step="1000" data-cost="ann,0" data-id="${x.id}" value="${x.ann[0]}"></label>
+        <label class="f">Annual high ($/yr)<input type="number" min="0" step="1000" data-cost="ann,1" data-id="${x.id}" value="${x.ann[1]}"></label>
+      </div>
+      <div class="form-grid">
+        <label class="f">Cost basis<select data-f="basis" data-id="${x.id}">${opt(BASIS.map(b => [b, b]), x.basis)}</select></label>
+        <label class="f">Cost notes / source<input type="text" data-f="notes" data-id="${x.id}" value="${esc(x.notes)}" placeholder="URL, vendor, peer agency"></label>
+      </div>
+      ${x.custom ? `<div><button class="btn danger small" data-act="delete" data-id="${x.id}">Remove this use case</button></div>` : ""}
+    </div>
+  </div></td></tr>`;
+}
+
+// ─── Roadmap ─────────────────────────────────────────────────────────────────
+function renderRoadmap() {
+  const m = model;
+  const fys = []; for (let q = 0; q < H; q++) { const f = fyOf(q); if (!fys.length || fys[fys.length - 1].key !== f.key) fys.push({ key: f.key, label: f.label, from: q, n: 1 }); else fys[fys.length - 1].n++; }
+  let html = `<div class="g-row g-head g-fy"><div></div>${fys.map(f => `<div class="c" style="grid-column:${f.from + 2} / span ${f.n}">${f.label}</div>`).join("")}<div class="c" style="grid-column:10">Later</div></div>`;
+  html += `<div class="g-row g-head"><div class="c" style="border:0;padding-left:0">Use case</div>${Array.from({ length: H }, (_, i) => `<div class="c">${qLabel(i)}</div>`).join("")}<div class="c"></div></div>`;
+  const items = m.inScope.filter(x => !m.sched[x.id].blocked);
+  const LANES = { foundation: "Foundations", quick: "Quick wins", strategic: "Strategic investments", longterm: "Long-term bets" };
+  const groups = ui.groupBy === "tier" ? TIER_ORDER.map(t => [LANES[t], items.filter(x => x.tier === t), `var(--t-${t})`]) : DEPTS.map(d => [d, items.filter(x => x.dept === d), "var(--line-strong)"]);
+  groups.forEach(([name, list, col]) => {
+    if (!list.length) return;
+    list.sort((a, b) => m.sched[a.id].start - m.sched[b.id].start || score(b) - score(a));
+    html += `<div class="g-lane"><span class="sw" style="background:${col}"></span>${esc(name)} <span class="small muted" style="font-family:var(--f-body);font-weight:400">${list.length}</span></div>`;
+    list.forEach(x => {
+      const s = m.sched[x.id];
+      const binding = s.reasons.filter(r => r.q === s.earliest || r.key === "capacity").map(r => r.text);
+      const waitFrom = 0, waitTo = Math.min(s.start, H);
+      const barStart = Math.min(s.start, H), barEnd = Math.min(s.end, H - 1);
+      html += `<div class="g-row"><div class="g-label"><strong>${esc(x.title)}</strong>${ui.groupBy === "tier" ? `<span class="dp">${esc(x.dept)}</span>` : ""}${s.start > 0 && binding.length ? `<span class="w">${esc(binding[binding.length - 1])}</span>` : ""}</div>
+        ${Array.from({ length: H }, (_, i) => `<div class="g-cell" style="grid-column:${i + 2}"></div>`).join("")}<div class="g-cell" style="grid-column:10"></div>
+        ${s.start > 0 && x.tier !== "foundation" ? `<div class="g-wait" style="grid-column:${waitFrom + 2} / ${waitTo + 2}"></div>` : ""}
+        ${s.start < H ? `<div class="g-bar ${x.tier}${s.end >= H ? " cont" : ""}" style="grid-column:${barStart + 2} / ${barEnd + 3}" title="${esc(x.title)}: ${qLabel(s.start)} to ${s.end >= H ? "after the window" : qLabel(s.end)}">${s.end - s.start + 1}q</div>` : ""}
+        ${s.end >= H ? `<div class="g-later" style="grid-column:10">${s.start >= H ? "→ " + qLabel(H) : "→"}</div>` : ""}
+      </div>`;
+    });
+  });
+  $("#gantt").innerHTML = html;
+
+  $("#heat").innerHTML = `<thead><tr><th>Area</th>${Array.from({ length: H }, (_, i) => `<th style="text-align:center">${qLabel(i)}</th>`).join("")}</tr></thead><tbody>` +
+    AREAS.map(a => `<tr><td>${esc(a.label)}</td>${Array.from({ length: H }, (_, q) => { const v = m.R[q][a.k]; return `<td class="${v < 50 ? "h-low" : v < 75 ? "h-mid" : "h-hi"}">${v}</td>`; }).join("")}</tr>`).join("") + `</tbody>`;
+
+  const late = m.inScope.filter(x => { const s = m.sched[x.id]; return s.blocked || s.start >= H; });
+  $("#deferred").innerHTML = late.length ? `<div class="list-q">${late.map(x => { const s = m.sched[x.id]; const why = s.blocked || s.reasons.filter(r => r.q === s.earliest || r.key === "capacity").map(r => r.text).join("; "); return `<div><span class="q">${s.blocked ? "Blocked" : qLabel(H)}</span><div><strong>${esc(x.title)}</strong><div class="small muted">${esc(why)}</div></div></div>`; }).join("")}</div>` : `<p class="muted">Every in-scope item starts inside the window.</p>`;
+}
+
+// ─── Readiness ───────────────────────────────────────────────────────────────
+function buildReadinessControls() {
+  $("#sliders").innerHTML = AREAS.map(a => `<div class="slider"><div class="top"><label for="r-${a.k}">${a.label}</label><span class="num" id="rv-${a.k}"></span></div><input type="range" min="0" max="100" step="5" id="r-${a.k}" data-r="${a.k}"><div class="hint">At 75 and above: ${esc(a.good)}</div></div>`).join("");
+  $("#checklist").innerHTML = CHECKLIST.map(([t, d], i) => `<label class="check"><input type="checkbox" data-check="${i}"><div><strong>${esc(t)}</strong><span>${esc(d)}</span></div></label>`).join("");
+}
+function renderReadiness() {
+  AREAS.forEach(a => { $("#r-" + a.k).value = state.readiness[a.k]; $("#rv-" + a.k).textContent = state.readiness[a.k]; });
+  $("#aStart").value = state.assume.start; $("#aFy").value = state.assume.fy; $("#aLead").value = state.assume.lead; $("#aCap").value = state.assume.cap; $("#aStance").value = state.assume.stance; $("#aReview").value = state.assume.review;
+  $$("[data-check]").forEach(c => { c.checked = !!state.checks[Number(c.dataset.check)]; });
+  $("#checkCount").textContent = state.checks.filter(Boolean).length + " of " + CHECKLIST.length + " confirmed";
+  const st = state.assume.stance === "strict" ? 10 : 0;
+  const rows = [["Every use case", "Governance 40"], ["Strategic and long-term", "Staff capacity 45"], ["Public-facing", "Governance 65"], ["Sensitive data", `Governance ${60 + st}, Cybersecurity ${60 + st}`], ["OT / SCADA data", `Cybersecurity ${70 + st}, Data 60`], ["Predictive or optimization models", "Data 55"], ["Agentic workflows", "Governance 70, Cybersecurity 65"], ["New purchase with one-time cost $100K+", "Next fiscal year if budget alignment is under 50"]];
+  $("#gateTable").innerHTML = `<thead><tr><th>Applies to</th><th>Minimum readiness</th></tr></thead><tbody>${rows.map(r => `<tr><td>${r[0]}</td><td class="mono small">${r[1]}</td></tr>`).join("")}</tbody>`;
+}
+
+// ─── Budget ──────────────────────────────────────────────────────────────────
+function renderBudget() {
+  const m = model, B = state.budget;
+  ["env", "cont", "gov", "train", "staff"].forEach(k => { const el = $("#b" + k[0].toUpperCase() + k.slice(1)); if (document.activeElement !== el) el.value = B[k]; });
+  const sumK = (fn) => [0, 1].map(k => m.qc.reduce((a, x) => a + fn(x)[k], 0));
+  const one = sumK(x => x.one), rec = sumK(x => x.rec), prog = sumK(x => x.prog);
+  const deferred = m.inScope.filter(x => { const s = m.sched[x.id]; return s.blocked || s.start >= H; });
+  const defCost = deferred.reduce((a, x) => a + mid(x.one) + mid(x.ann), 0);
+  $("#budgetTiles").innerHTML = `
+    <div class="card stat"><span class="eyebrow">24-month total</span><span class="val">${range(m.total)}</span><span class="sub">vs. envelope ${money(m.envelopeWindow)}</span></div>
+    <div class="card stat"><span class="eyebrow">One-time</span><span class="val">${range(one)}</span><span class="sub">Implementation, integration, data cleanup</span></div>
+    <div class="card stat"><span class="eyebrow">Recurring in window</span><span class="val">${range(rec)}</span><span class="sub">Run-rate entering ${qDate(H).y}: ${range(m.runRate)}/yr</span></div>
+    <div class="card stat"><span class="eyebrow">Pushed past the window</span><span class="val">${money(defCost)}</span><span class="sub">${deferred.length} item${deferred.length === 1 ? "" : "s"} (first-year cost, midpoint). Plan these for the next cycle.</span></div>`;
+
+  // Chart
+  const W = 760, Hh = 280, pl = 56, pr = 12, pt = 14, pb = 44;
+  const vals = m.qc.map(x => ({ one: mid(x.one), rec: mid(x.rec), prog: mid(x.prog) }));
+  const envQ = Number(B.env) / 4;
+  const maxV = Math.max(envQ, ...vals.map(v => v.one + v.rec + v.prog), 1);
+  const step = niceStep(maxV / 4); const top = Math.ceil(maxV / step) * step;
+  const y = v => pt + (Hh - pt - pb) * (1 - v / top);
+  const bw = (W - pl - pr) / H;
+  let svg = `<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Spend by quarter, midpoint estimate">`;
+  for (let t = 0; t <= top + 1; t += step) svg += `<line x1="${pl}" x2="${W - pr}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line)" stroke-width="1"/><text x="${pl - 8}" y="${y(t) + 4}" text-anchor="end">${money(t)}</text>`;
+  vals.forEach((v, i) => {
+    const x = pl + i * bw + bw * 0.18, w = bw * 0.64;
+    let base = 0;
+    [["prog", "var(--line-strong)"], ["rec", "var(--t-foundation)"], ["one", "var(--t-strategic)"]].forEach(([k, c]) => {
+      const h = y(base) - y(base + v[k]);
+      if (h > 0.5) svg += `<rect x="${x}" y="${y(base + v[k])}" width="${w}" height="${h}" fill="${c}"><title>${qLabel(i)} ${k === "one" ? "one-time" : k === "rec" ? "recurring" : "program + contingency"}: ${money(v[k])}</title></rect>`;
+      base += v[k];
+    });
+    svg += `<text x="${x + w / 2}" y="${y(base) - 5}" text-anchor="middle" style="fill:var(--ink)">${money(base)}</text>`;
+    svg += `<text x="${x + w / 2}" y="${Hh - pb + 18}" text-anchor="middle">${qLabel(i)}</text><text x="${x + w / 2}" y="${Hh - pb + 32}" text-anchor="middle" style="font-size:10px">${fyOf(i).label}</text>`;
+  });
+  svg += `<line x1="${pl}" x2="${W - pr}" y1="${y(envQ)}" y2="${y(envQ)}" stroke="var(--gate)" stroke-width="2" stroke-dasharray="6 4"/>`;
+  $("#envLegend").textContent = `Budget envelope (${money(envQ)}/qtr)`;
+  svg += `</svg>`;
+  $("#budgetChart").innerHTML = svg;
+
+  // By FY
+  const fy = {};
+  m.qc.forEach((x, i) => { const f = fyOf(i); const r = fy[f.key] = fy[f.key] || { label: f.label, n: 0, one: [0, 0], rec: [0, 0], prog: [0, 0], tot: [0, 0] }; r.n++; for (let k = 0; k < 2; k++) { r.one[k] += x.one[k]; r.rec[k] += x.rec[k]; r.prog[k] += x.prog[k]; r.tot[k] += x.total[k]; } });
+  $("#fyTable").innerHTML = `<thead><tr><th>Fiscal year</th><th class="num">Qtrs</th><th class="num">One-time</th><th class="num">Recurring</th><th class="num">Program + cont.</th><th class="num">Total</th><th class="num">Envelope</th></tr></thead><tbody>` +
+    Object.values(fy).map(r => { const env = Number(B.env) * r.n / 4; const cls = r.tot[0] > env ? "bad" : r.tot[1] > env ? "warn" : "good"; return `<tr><td>${r.label}</td><td class="num">${r.n}</td><td class="num">${range(r.one)}</td><td class="num">${range(r.rec)}</td><td class="num">${range(r.prog)}</td><td class="num"><strong>${range(r.tot)}</strong></td><td class="num"><span class="chip ${cls}">${money(env)}</span></td></tr>`; }).join("") +
+    `<tr class="total"><td>Window</td><td class="num">${H}</td><td class="num">${range(one)}</td><td class="num">${range(rec)}</td><td class="num">${range(prog)}</td><td class="num">${range(m.total)}</td><td class="num">${money(m.envelopeWindow)}</td></tr></tbody>`;
+
+  // By department
+  const dept = {};
+  m.inScope.forEach(x => { const c = m.perItem[x.id]; const d = dept[x.dept] = dept[x.dept] || { n: 0, lo: 0, hi: 0, rr: [0, 0] }; d.n++; d.lo += c.lo; d.hi += c.hi; const s = m.sched[x.id]; if (s && !s.blocked && s.start < H) { d.rr[0] += x.ann[0]; d.rr[1] += x.ann[1]; } });
+  const maxD = Math.max(1, ...Object.values(dept).map(d => d.hi));
+  $("#deptTable").innerHTML = `<thead><tr><th>Department</th><th class="num">In scope</th><th class="num">24-month (before program + contingency)</th><th style="width:30%"></th><th class="num">Annual run-rate after</th></tr></thead><tbody>` +
+    DEPTS.filter(d => dept[d]).map(d => { const r = dept[d]; return `<tr><td>${esc(d)}</td><td class="num">${r.n}</td><td class="num">${range([r.lo, r.hi])}</td><td><div style="position:relative;height:10px;background:var(--sunken);border-radius:5px"><div style="position:absolute;left:0;top:0;bottom:0;width:${100 * r.hi / maxD}%;background:var(--accent-soft);border-radius:5px"></div><div style="position:absolute;left:0;top:0;bottom:0;width:${100 * r.lo / maxD}%;background:var(--accent);border-radius:5px"></div></div></td><td class="num">${range(r.rr)}</td></tr>`; }).join("") + `</tbody>`;
+}
+function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw || 1))); const n = raw / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p; }
+
+// ─── Horizon ─────────────────────────────────────────────────────────────────
+function renderHorizon() {
+  $("#radar").innerHTML = HORIZON.map(r => `<div class="ring" style="--ring:${r.color}"><header><h3>${r.ring}</h3><p>${r.blurb}</p></header>${r.items.map(t => `<article class="trend"><h4>${esc(t.t)}</h4><p>${esc(t.p)}</p>${t.ids.length ? `<div class="chips">${t.ids.map(id => { const it = byId(id); return it ? `<button class="chip" data-act="jump" data-id="${id}" title="Open in portfolio">${esc(it.title)}</button>` : ""; }).join("")}</div>` : ""}${t.ev.length ? `<div class="ev">${t.ev.map(([l, u]) => `<a href="${u}" target="_blank" rel="noopener">${esc(l)}</a>`).join(" · ")}</div>` : ""}</article>`).join("")}</div>`).join("");
+}
+
+// ─── Brief ───────────────────────────────────────────────────────────────────
+function renderBrief() {
+  const m = model, p = postureFor(m.avgNow);
+  const uc = m.inScope.filter(x => x.tier !== "foundation");
+  const founds = m.inScope.filter(x => x.tier === "foundation");
+  const span = x => { const s = m.sched[x.id]; return s.blocked ? "blocked" : s.start >= H ? "after window" : qLabel(s.start) + "–" + (s.end >= H ? "beyond" : qLabel(s.end)); };
+  const byQ = {};
+  uc.forEach(x => { const s = m.sched[x.id]; if (s.blocked || s.start >= H) return; (byQ[s.start] = byQ[s.start] || []).push(x); });
+  const late = uc.filter(x => { const s = m.sched[x.id]; return s.blocked || s.start >= H; });
+  const lowest = AREAS.slice().sort((a, b) => state.readiness[a.k] - state.readiness[b.k]).slice(0, 2);
+  const firstFy = fyOf(0).label;
+  const foundOne = founds.reduce((a, x) => [a[0] + x.one[0], a[1] + x.one[1]], [0, 0]);
+  const done = state.checks.filter(Boolean).length;
+  const lines = [];
+  lines.push(`AI ROADMAP BRIEF: ${state.scenario.toUpperCase()}`);
+  lines.push(`Planning window: ${windowLabel()} (8 quarters) · Prepared ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`);
+  lines.push("");
+  lines.push(`RECOMMENDATION: ${p.name.toUpperCase()}`);
+  lines.push(p.text);
+  lines.push(`Average readiness today is ${m.avgNow}/100, weakest in ${lowest.map(a => a.label.toLowerCase() + " (" + state.readiness[a.k] + ")").join(" and ")}. If the foundations deliver on schedule, readiness reaches about ${m.avgEnd} by ${windowEnd()} (${postureFor(m.avgEnd).name.toLowerCase()}).`);
+  lines.push("");
+  lines.push("COST");
+  lines.push(`- 24-month estimate: ${range(m.total)}, including ${state.budget.cont}% contingency and program costs (governance, training, staff time).`);
+  lines.push(`- Annual envelope ${money(state.budget.env)} (${money(m.envelopeWindow)} over the window): ${m.total[0] > m.envelopeWindow ? "the plan exceeds it even at the low end" : m.total[1] > m.envelopeWindow ? "the high end of the plan exceeds it" : "the plan fits within it"}.`);
+  lines.push(`- Recurring commitment entering ${qDate(H).y}: ${range(m.runRate)} per year before contingency.`);
+  lines.push("");
+  lines.push("FOUNDATIONS (START FIRST)");
+  founds.forEach(x => lines.push(`- ${x.title} [${span(x)}]: ${x.kpi}`));
+  lines.push("");
+  lines.push("USE CASES BY START QUARTER");
+  Object.keys(byQ).map(Number).sort((a, b) => a - b).forEach(q => { lines.push(`${qLong(q)}:`); byQ[q].sort((a, b) => score(b) - score(a)).forEach(x => lines.push(`  - ${x.title} (${x.dept}; ${TIERS[x.tier]}; score ${score(x)}) — KPI: ${x.kpi}`)); });
+  if (late.length) {
+    lines.push("");
+    lines.push("NOT IN THIS WINDOW");
+    late.forEach(x => { const s = m.sched[x.id]; lines.push(`- ${x.title}: ${s.blocked || s.reasons.filter(r => r.q === s.earliest || r.key === "capacity").map(r => r.text).join("; ")}`); });
+  }
+  lines.push("");
+  lines.push("GUARDRAILS");
+  lines.push(`- Human review: ${state.assume.review}.`);
+  lines.push(`- Sensitive data stance: ${state.assume.stance === "strict" ? "strict, with no sensitive data until controls are proven" : "standard, with sensitive data allowed after review"}.`);
+  lines.push("- No AI writes to SCADA, PLCs or control systems in this window. Plant and collections models are advisory.");
+  lines.push("- Staff certify every regulatory submission, with every value traceable to LIMS/SCADA source data.");
+  lines.push("- Prompts and outputs used for District business are treated as potential public records.");
+  lines.push("- No AI in hiring, discipline or other employment decisions.");
+  lines.push("");
+  lines.push("DECISIONS REQUESTED");
+  lines.push(`1. Endorse the "${p.name.toLowerCase()}" posture and the foundation program (one-time ${range(foundOne)}).`);
+  lines.push(`2. Direct staff to bring the AI policy and review group to the Board in ${qLong(m.sched["f-gov"] && !m.sched["f-gov"].blocked ? m.sched["f-gov"].end : 1)}.`);
+  lines.push(`3. Approve the first-two-quarter pilots listed above, each with a named owner, KPI and stop/continue date.`);
+  lines.push(`4. Include AI line items in the ${firstFy === fyOf(H - 1).label ? firstFy : fyOf(Math.min(4, H - 1)).label} budget, including the recurring run-rate.`);
+  lines.push(`Decision checklist: ${done} of ${CHECKLIST.length} items confirmed.`);
+  lines.push("");
+  lines.push("Caveat: planning ranges, not quotes. Vendor-reported results are noted as such. Validate with procurement, finance, cybersecurity, records and legal review before committing funds.");
+  $("#briefText").value = lines.join("\n");
+  $("#scenarioJson").value = JSON.stringify(state);
+}
+
+// ─── Events ──────────────────────────────────────────────────────────────────
+function copyText(text, el) {
+  const fallback = () => { if (el) { el.focus(); el.select(); } toast("Selected. Press Ctrl+C (or ⌘C) to copy."); };
+  try { navigator.clipboard.writeText(text).then(() => toast("Copied to clipboard."), fallback); } catch (e) { fallback(); }
+}
+function applyLoaded(text) {
+  try {
+    const s = JSON.parse(text);
+    if (!s || s.v !== 3 || !Array.isArray(s.items)) throw new Error("bad");
+    state = Object.assign(defaultState(), s);
+    $("#scenarioName").value = state.scenario;
+    renderAll(); toast("Scenario loaded.");
+  } catch (e) { toast("That text isn't a saved scenario from this dashboard."); }
+}
+function init() {
+  const deptOpts = DEPTS.map(d => `<option>${esc(d)}</option>`).join("");
+  $("#newDept").innerHTML = deptOpts;
+  $("#fDept").innerHTML += deptOpts;
+  $("#fTier").innerHTML += opt(Object.entries(TIERS), "");
+  $("#newPattern").innerHTML = opt(Object.entries(PATTERNS).filter(([k]) => k !== "program"), "assistant");
+  $("#newSens").innerHTML = opt(Object.entries(SENS), "internal");
+  $("#scenarioName").value = state.scenario;
+  ["v", "f", "r", "e"].forEach(k => { $("#w" + k.toUpperCase()).value = state.weights[k]; });
+  buildReadinessControls();
+
+  $$(".tab").forEach(b => b.addEventListener("click", () => setTab(b.dataset.tab)));
+  document.addEventListener("click", e => {
+    const g = e.target.closest("[data-goto]"); if (g) { setTab(g.dataset.goto); return; }
+    const a = e.target.closest("[data-act]"); if (!a) return;
+    const id = a.dataset.id;
+    if (a.dataset.act === "toggle") { ui.open.has(id) ? ui.open.delete(id) : ui.open.add(id); renderPortfolio(); }
+    if (a.dataset.act === "delete") {
+      if (a.dataset.armed) { state.items = state.items.filter(x => x.id !== id); state.items.forEach(x => { x.pre = x.pre.filter(p => p !== id); }); ui.open.delete(id); renderAll(); toast("Use case removed."); }
+      else { a.dataset.armed = "1"; a.textContent = "Click again to remove"; }
+    }
+    if (a.dataset.act === "jump") { const it = byId(id); ui.filters = { q: it.title, dept: "", status: "", tier: "" }; ui.open.add(id); $("#fSearch").value = it.title; $("#fDept").value = ""; $("#fStatus").value = ""; $("#fTier").value = ""; setTab("portfolio"); }
+  });
+
+  // Portfolio edits (delegated)
+  $("#pfBody").addEventListener("change", e => {
+    const el = e.target, it = byId(el.dataset.id); if (!it) return;
+    if (el.dataset.k) it[el.dataset.k] = Number(el.value);
+    else if (el.dataset.cost) { const [k, i] = el.dataset.cost.split(","); it[k][Number(i)] = Math.max(0, Number(el.value) || 0); if (it[k][0] > it[k][1]) it[k][Number(i) === 0 ? 1 : 0] = it[k][Number(i)]; if (it.basis === "Planning estimate") it.basis = "Staff estimate"; }
+    else if (el.dataset.f === "flags") it.flags = el.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+    else if (el.dataset.f === "dur") it.dur = Number(el.value);
+    else if (el.dataset.f === "pin") it.pin = el.value === "" ? null : Number(el.value);
+    else if (el.dataset.f) it[el.dataset.f] = el.value;
+    renderAll();
+  });
+  $("#fSearch").addEventListener("input", e => { ui.filters.q = e.target.value; renderPortfolio(); });
+  [["#fDept", "dept"], ["#fStatus", "status"], ["#fTier", "tier"]].forEach(([s, k]) => $(s).addEventListener("change", e => { ui.filters[k] = e.target.value; renderPortfolio(); }));
+  ["v", "f", "r", "e"].forEach(k => $("#w" + k.toUpperCase()).addEventListener("change", e => { state.weights[k] = Math.max(0, Number(e.target.value) || 0); renderAll(); }));
+
+  $("#toggleAdd").addEventListener("click", () => { const f = $("#addForm"); f.hidden = !f.hidden; if (!f.hidden) $("#newTitle").focus(); });
+  $("#addBtn").addEventListener("click", () => {
+    const title = $("#newTitle").value.trim(), desc = $("#newDesc").value.trim(), src = $("#newSource").value.trim();
+    if (!title) { toast("Give the use case a title."); $("#newTitle").focus(); return; }
+    const pii = [/\bpassword\b|\btoken\b|\bcredential\b|\bsecret\b|\bapi[_ ]?key\b/i, /\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b/];
+    if (pii.some(r => r.test(title + " " + desc + " " + src))) { $("#piiWarn").hidden = false; return; }
+    $("#piiWarn").hidden = true;
+    const sz = SIZE[$("#newSize").value];
+    const id = "u-" + Date.now().toString(36);
+    const sens = $("#newSens").value;
+    state.items.push({ id, dept: $("#newDept").value, title, desc: desc || "Added by staff.", tier: sz.tier, pattern: $("#newPattern").value, sens, acq: $("#newAcq").value,
+      v: sz.v, f: sz.f, r: sens === "internal" ? sz.r : Math.min(5, sz.r + 1), e: sz.e, dur: sz.dur, one: sz.one.slice(), ann: sz.ann.slice(),
+      pre: sens === "ot" ? ["f-gov", "f-ot"] : sens === "sensitive" ? ["f-gov", "f-data"] : ["f-gov"], boost: null,
+      kpi: "Define a measurable outcome and a stop/continue date.", flags: ["Confirm data handling, records and vendor terms through AI intake."], status: "in",
+      basis: src ? "Market-informed" : "Planning estimate", notes: src, pin: null, custom: true });
+    ["#newTitle", "#newDesc", "#newSource"].forEach(s => { $(s).value = ""; });
+    ui.open.add(id); ui.filters = { q: "", dept: "", status: "", tier: "" }; $("#fSearch").value = ""; $("#fDept").value = ""; $("#fStatus").value = ""; $("#fTier").value = "";
+    $("#addForm").hidden = true;
+    renderAll(); toast(`Added “${title}” as in scope. Its details are open below.`);
+  });
+
+  $("#groupBy").addEventListener("change", e => { ui.groupBy = e.target.value; renderRoadmap(); });
+
+  $("#sliders").addEventListener("input", e => { const k = e.target.dataset.r; if (!k) return; state.readiness[k] = Number(e.target.value); $("#rv-" + k).textContent = e.target.value; compute(); save(); });
+  $("#checklist").addEventListener("change", e => { const i = e.target.dataset.check; if (i == null) return; state.checks[Number(i)] = e.target.checked; $("#checkCount").textContent = state.checks.filter(Boolean).length + " of " + CHECKLIST.length + " confirmed"; save(); });
+  [["#aStart", "start"], ["#aFy", "fy"], ["#aLead", "lead"], ["#aCap", "cap"], ["#aStance", "stance"], ["#aReview", "review"]].forEach(([s, k]) => $(s).addEventListener("change", e => { if (k === "start" && !/^\d{4}-\d{2}$/.test(e.target.value)) return; state.assume[k] = ["fy", "lead", "cap"].includes(k) ? Number(e.target.value) : e.target.value; renderAll(); }));
+  ["env", "cont", "gov", "train", "staff"].forEach(k => $("#b" + k[0].toUpperCase() + k.slice(1)).addEventListener("change", e => { state.budget[k] = Math.max(0, Number(e.target.value) || 0); renderAll(); }));
+  $("#scenarioName").addEventListener("input", e => { state.scenario = e.target.value || "Untitled scenario"; save(); });
+
+  $("#copyBrief").addEventListener("click", () => copyText($("#briefText").value, $("#briefText")));
+  $("#copyJson").addEventListener("click", () => copyText($("#scenarioJson").value, $("#scenarioJson")));
+  $("#loadBtn").addEventListener("click", () => applyLoaded($("#loadJson").value));
+  $("#loadFile").addEventListener("change", e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => applyLoaded(String(r.result)); r.readAsText(f); e.target.value = ""; });
+  $("#resetBtn").addEventListener("click", e => {
+    const b = e.currentTarget;
+    if (b.dataset.armed) { state = defaultState(); $("#scenarioName").value = state.scenario; ["v", "f", "r", "e"].forEach(k => { $("#w" + k.toUpperCase()).value = state.weights[k]; }); delete b.dataset.armed; b.textContent = "Reset to sample data"; renderAll(); toast("Reset to the sample scenario."); }
+    else { b.dataset.armed = "1"; b.textContent = "Click again to erase your edits"; setTimeout(() => { delete b.dataset.armed; b.textContent = "Reset to sample data"; }, 4000); }
+  });
+
+  const h = (location.hash || "").slice(1);
+  setTab(["overview", "portfolio", "roadmap", "readiness", "budget", "horizon", "brief"].includes(h) ? h : "overview");
+}
+init();
+</script>
+</body><!--wrap-->
+</html><!--wrap-->
