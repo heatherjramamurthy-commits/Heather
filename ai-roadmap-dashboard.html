@@ -328,6 +328,15 @@ ol.tight, ul.tight { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
       </div>
     </div>
     <div class="card">
+      <header><h3>A starting move for every department</h3><span class="small muted">For managers asked to “do something with AI.” Each one is in scope or ready to propose.</span></header>
+      <ol class="tight small" style="margin-top:10px">
+        <li><strong>Use the sanctioned assistant for one recurring task</strong>, after the one-hour training. Report hours saved each month.</li>
+        <li><strong>Take on the department's starter project below.</strong> Name an owner, a KPI and a stop/continue date.</li>
+        <li><strong>Send new ideas through intake</strong> instead of buying a tool. The review group answers within 30 days.</li>
+      </ol>
+      <div class="tw" style="margin-top:12px"><table><thead><tr><th>Department</th><th>Starter project</th><th>Status</th><th>Starts</th><th>Success measure</th></tr></thead><tbody id="starterTable"></tbody></table></div>
+    </div>
+    <div class="card">
       <header><h3>Top priorities by score</h3><span class="small muted">Score blends value, feasibility, risk and effort. Weights are on the Portfolio tab.</span></header>
       <div class="tw"><table><thead><tr><th>#</th><th>Use case</th><th>Department</th><th>Tier</th><th class="num">Score</th><th>Starts</th><th class="num">2-yr cost (mid)</th></tr></thead><tbody id="topTable"></tbody></table></div>
     </div>
@@ -471,6 +480,7 @@ ol.tight, ul.tight { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
           <li><strong>No AI in hiring or discipline decisions.</strong> Drafting help for HR documents is fine. Screening or ranking people is not.</li>
           <li><strong>Disclose AI on public-facing channels.</strong> Website assistants are labeled, and emergencies like sewer backups go straight to a person.</li>
           <li><strong>Treat prompts and outputs as potential public records.</strong> Use the District's sanctioned tools only, with retention set by policy.</li>
+          <li><strong>No broad M365 Copilot until the cleanup is done.</strong> Copilot can reach only sites that have passed the Varonis review.</li>
           <li><strong>Infrastructure maps and control-system documents stay Restricted.</strong> They never go into consumer AI tools.</li>
         </ul>
       </div>
@@ -604,14 +614,20 @@ const DEPTS = ["Enterprise / IT", "Treatment Plant Operations", "Collections & C
 // boost: readiness points added after a foundation finishes, kpi, flags, st: default status
 const SEED = [
   { i: "f-gov", d: "Enterprise / IT", t: "AI policy, review group & vendor AI terms", tier: "foundation", p: "program", s: "internal", a: "existing", v: 5, f: 4, r: 1, e: 2, dur: 2, one: [15000, 40000], ann: [0, 5000], pre: [], boost: { gov: 25, procurement: 15 }, st: "in",
-    x: "Adapt the GovAI Coalition policy and vendor templates (aligned to the NIST AI RMF), stand up a cross-department AI review group, launch a use-case intake form, and make no-training-on-District-data and security terms standard in AI contracts.",
-    kpi: "Policy adopted by the Board; every new AI tool goes through intake.", flags: ["Board adoption timing drives the start of nearly everything downstream.", "Publish an AI use register on the District website."] },
-  { i: "f-data", d: "Enterprise / IT", t: "Data classification, sensitivity labels & DLP", tier: "foundation", p: "program", s: "internal", a: "existing", v: 5, f: 3, r: 1, e: 3, dur: 3, one: [20000, 60000], ann: [5000, 15000], pre: [], boost: { data: 15, gov: 5, cyber: 5 }, st: "in",
-    x: "Define Public / Internal / Confidential / Restricted (security-sensitive infrastructure maps and SCADA documents are Restricted). Fix over-shared SharePoint and Teams sites, then apply sensitivity labels and data-loss prevention.",
-    kpi: "Labels on the top 10 sites; DLP policies active; over-sharing report clean.", flags: ["Copilot-style assistants can surface anything a user can technically open. Fix permissions first."] },
-  { i: "f-assist", d: "Enterprise / IT", t: "Sanctioned AI assistant + measured pilot cohort", tier: "foundation", p: "assistant", s: "internal", a: "existing", v: 5, f: 4, r: 2, e: 2, dur: 1, one: [5000, 15000], ann: [22000, 45000], pre: [], boost: { staff: 5, gov: 5 }, st: "in",
-    x: "Give every employee a District-approved assistant with enterprise data protection (e.g., M365 Copilot Chat), plus 60–100 paid seats for a measured pilot across departments. This replaces shadow use of consumer tools.",
-    kpi: "Weekly active users; self-reported hours saved; no consumer-AI policy exceptions.", flags: ["Launch with interim acceptable-use guidance while the full policy goes to the Board.", "Partner sources report about an 8% government price increase for Copilot from July 2026. Budget for license inflation."] },
+    x: "Adapt the GovAI Coalition policy and vendor templates (aligned to the NIST AI RMF), stand up a cross-department AI review group, launch a use-case intake form, and make no-training-on-District-data and security terms standard in AI contracts. Write down who decides what, by when, and what happens by default when nobody decides.",
+    kpi: "Policy adopted by the Board; every new AI tool goes through intake; decision rights and defaults published.", flags: ["Board adoption timing drives the start of nearly everything downstream.", "Decisions stall when nobody owns them. Every decision type gets a named owner and a deadline; if the owner doesn't decide in 30 days, the documented default applies and the review group is told.", "Publish an AI use register on the District website."] },
+  { i: "f-data", d: "Enterprise / IT", t: "SharePoint & Teams cleanup, labels & DLP (Varonis-assisted)", tier: "foundation", p: "program", s: "internal", a: "existing", v: 5, f: 3, r: 1, e: 3, dur: 4, one: [30000, 80000], ann: [10000, 25000], pre: [], boost: { data: 15, gov: 5, cyber: 10 }, st: "in",
+    x: "The cybersecurity analyst is already using Varonis to find over-shared sites, \u201cEveryone\u201d links, broken permissions and stale content. Each finding needs a content owner to keep, restrict, archive or delete it. Agree the default rules before the findings arrive, so cleanup keeps moving when owners don't decide. Then define Public / Internal / Confidential / Restricted (infrastructure maps and SCADA documents are Restricted) and apply sensitivity labels and data-loss prevention.",
+    kpi: "Every site has a named owner; org-wide and \u201cEveryone\u201d sharing removed from sensitive sites; labels on the top 20 sites.",
+    flags: ["Default rules to approve up front: sites with no owner are archived after 30 days' notice; org-wide and anonymous links are removed unless the owner renews them; content untouched for 3+ years moves to archive.", "Name a decider per department, not per file. Department heads can delegate, but not decline.", "This cleanup is what gates M365 Copilot. It does not gate a general-purpose assistant that can't see SharePoint."] },
+  { i: "f-assist", d: "Enterprise / IT", t: "One sanctioned general-purpose AI assistant", tier: "foundation", p: "assistant", s: "internal", a: "existing", v: 5, f: 4, r: 2, e: 2, dur: 1, one: [5000, 15000], ann: [20000, 60000], pre: [], boost: { staff: 5, gov: 5 }, st: "in",
+    x: "Choose one approved assistant for everyone and retire the rest. Because it doesn't search SharePoint, it doesn't have to wait for the cleanup. Candidates: keep GovAI.com; Claude through California's CDT agreement (if special districts are eligible); ChatGPT or Gemini enterprise plans; Microsoft Copilot Chat. Choose on five criteria: District data never used for training; chat logs exportable for public records; single sign-on and admin controls; current models; price per user.",
+    kpi: "One tool chosen within a quarter; weekly active users; self-reported hours saved; consumer AI use falling.",
+    flags: ["Run a 30-day side-by-side of 2\u20133 finalists on real, non-sensitive District tasks, scored by staff from several departments.", "Launch with interim acceptable-use guidance while the full policy goes to the Board.", "Disclosure: this dashboard was drafted with Claude, which is made by Anthropic, the vendor in California's agreement. Judge the options on the criteria, not on who suggested them."] },
+  { i: "f-shadow", d: "Enterprise / IT", t: "Shadow AI amnesty & approved-tools list", tier: "foundation", p: "program", s: "internal", a: "existing", v: 4, f: 5, r: 1, e: 1, dur: 1, one: [3000, 10000], ann: [0, 5000], pre: [], boost: { gov: 5, cyber: 5 }, st: "in",
+    x: "Ask staff which AI tools they use and for what, with no penalty. Confirm it against web-traffic data from the firewall or cloud-app discovery. Then publish a short list: approved, approved with limits, and not approved. Move the valuable uses onto the sanctioned assistant.",
+    kpi: "Inventory of tools and uses; approved list published; consumer AI warned or blocked on District devices once the sanctioned tool is live.",
+    flags: ["Lead with amnesty. The aim is to learn what people need, not to punish them.", "Shadow use is demand data: its top uses become the first pilots.", "A 2025 KPMG/University of Melbourne survey found 59% of employees had used AI at work without knowing whether it was allowed."] },
   { i: "f-lit", d: "Enterprise / IT", t: "AI literacy & role-based training", tier: "foundation", p: "program", s: "internal", a: "existing", v: 4, f: 5, r: 1, e: 2, dur: 3, one: [10000, 25000], ann: [5000, 15000], pre: [], boost: { staff: 25 }, st: "in",
     x: "Short required training for all staff (what's allowed, checking outputs, records), hands-on labs for power users and the IT AI team, monthly office hours, and an AI champion in each department.",
     kpi: "90% staff completion; a champion in every department.", flags: [] },
@@ -631,6 +647,10 @@ const SEED = [
     x: "Use AI features in the security stack or a managed detection service to triage alerts, analyze reported phishing and summarize incidents across IT and OT logs.", kpi: "Mean time to triage alerts down 50%.", flags: ["The EPA/WaterISAC Q3 2026 bulletin flags AI as both a growing threat and a defensive tool for water utilities.", "Check what your current security vendors already include before buying."] },
   { i: "it-know", d: "Enterprise / IT", t: "District knowledge assistant (policies, SOPs, Board actions)", tier: "strategic", p: "assistant", s: "internal", a: "new", v: 4, f: 3, r: 2, e: 3, dur: 3, one: [15000, 40000], ann: [8000, 20000], pre: ["f-data", "f-assist"], st: "review",
     x: "Search-and-answer assistant over approved policies, SOPs, Board resolutions and admin procedures, with citations to the source document.", kpi: "Every answer cites a source; 80% rated helpful.", flags: ["Only current, approved documents go into the index."] },
+  { i: "it-m365", d: "Enterprise / IT", t: "Microsoft 365 Copilot in Outlook, Teams & SharePoint", tier: "strategic", p: "assistant", s: "sensitive", a: "new", v: 4, f: 2, r: 3, e: 3, dur: 3, one: [15000, 40000], ann: [30000, 90000], pre: ["f-gov", "f-data"], st: "review",
+    x: "The version staff keep asking for: Copilot inside Outlook, Teams, Word and Excel that can search District files and mail. It is only as safe as SharePoint permissions, so it waits for the cleanup. Start with a small pilot limited to cleaned sites before any broad license purchase.",
+    kpi: "Pilot users save 2+ hours a week with zero oversharing incidents before any broad purchase.",
+    flags: ["Copilot follows permissions, not intent. Anything a user can technically open, including mis-shared HR, legal or infrastructure files, it can find and summarize.", "Microsoft's Restricted Content Discovery and Restricted Access Control can keep un-cleaned sites out of a pilot.", "Partner sources report about an 8% government price increase from July 2026. Budget for license inflation."] },
   { i: "it-agent", d: "Enterprise / IT", t: "Back-office agents with human approval steps", tier: "longterm", p: "agent", s: "internal", a: "existing", v: 4, f: 2, r: 3, e: 4, dur: 3, one: [20000, 50000], ann: [10000, 30000], pre: ["f-assist", "f-rec"], st: "review",
     x: "Agents that handle multi-step routine work, such as onboarding checklists, requisition prep and meeting follow-ups, and pause for a person to approve before acting.", kpi: "Cycle time on targeted workflows down 30% with zero unapproved actions.", flags: ["Log every agent action as a record.", "Least-privilege permissions. Track NIST's AI Agent Standards Initiative (launched Feb 2026)."] },
 
@@ -731,7 +751,8 @@ const SEED = [
 
 const HORIZON = [
   { ring: "Adopt now", color: "var(--good)", blurb: "Mature, low-risk, and peers are using it.", items: [
-    { t: "Secure enterprise assistants", p: "Copilot Chat with enterprise data protection is in GCC, and Microsoft added Researcher and Analyst agents for government tenants in April 2026. A sanctioned tool is the best defense against staff pasting District data into consumer apps.", ev: [["Nextgov: Copilot for government clouds", "https://www.nextgov.com/acquisition/2025/12/microsoft-makes-copilot-available-secure-cloud-customers/409912"]], ids: ["f-assist", "it-know"] },
+    { t: "One sanctioned general assistant", p: "The market moves faster than any single government-tailored tool. California now lets cities and counties buy Claude at the state's discounted rate through CDT's SITeS program (agreement STP-GENAI-26-ANTHROPIC); ask CDT whether special districts qualify. Poppy, the state's own assistant, is for state departments. Pick on criteria, run a short bake-off, and revisit the choice every year. Disclosure: Claude is made by Anthropic, which also made the tool that drafted this page.", ev: [["Governor's announcement (June 2026)", "https://www.gov.ca.gov/2026/06/29/governor-newsom-announces-a-first-of-its-kind-partnership-providing-anthropic-tools-to-state-agencies-and-improving-services-for-californians/"], ["CDT: Poppy statewide", "https://www.cdt.ca.gov/newsroom/2026/07/poppy-california-digitals-assistant-now-available-statewide/"], ["Anthropic public-sector FAQ (ordering steps)", "https://support.claude.com/en/articles/13756069-public-sector-faqs"]], ids: ["f-assist"] },
+    { t: "Shadow AI amnesty", p: "Staff are already using AI; a UNC School of Government post (Sept 2026) warns that agencies wrongly assume no endorsement means no use. Surveying with amnesty turns hidden use into a list of real needs and the first pilots.", ev: [["UNC SOG: 14 AI policy recommendations", "https://canons.sog.unc.edu/blog/2026/09/09/developing-and-updating-ai-use-policies-14-recommendations-for-local-governments/"], ["MissionSquare survey of public employees", "https://research.missionsq.org/content/media/document/2025/5/Artificial_Intelligence_StateLocalEmployees.pdf"]], ids: ["f-shadow"] },
     { t: "AI-assisted CCTV coding (PACP)", p: "The most proven AI use in collections. Vendors pre-code footage and certified staff review it. Houston reports $1M+ in savings under a consent decree, and Phoenix ran a five-vendor bake-off before choosing.", ev: [["SewerAI AutoCode (vendor-reported)", "https://www.sewerai.com/products/autocode"], ["PipeLogix + PipeAId", "https://www.wateronline.com/doc/pipelogix-partners-with-pipeaid-to-modernize-and-automate-pipeline-inspection-0001"]], ids: ["cc-cctv", "cc-cof"] },
     { t: "Document AI for paper-heavy work", p: "Invoices, permits, as-builts, chain-of-custody forms and contracts. Reading documents is where today's models are most reliable, and every output has a human check point.", ev: [], ids: ["pd-asb", "rc-permit", "fi-ap", "la-coc"] }
   ]},
@@ -745,6 +766,7 @@ const HORIZON = [
     { t: "NIST AI profile for critical infrastructure", p: "NIST released a concept note for an AI RMF profile on critical infrastructure in April 2026. When it's final, it is likely to become the yardstick for utility AI programs and grants.", ev: [["NIST AI RMF", "https://www.nist.gov/itl/ai-risk-management-framework"]], ids: ["f-gov"] }
   ]},
   { ring: "Hold", color: "var(--gate)", blurb: "Not this window. The risk outweighs the benefit for now.", items: [
+    { t: "Broad M365 Copilot rollout before cleanup", p: "Copilot surfaces whatever a user can open, so over-shared HR, legal and infrastructure files become one question away. Finish the Varonis cleanup for the sites it can reach, then pilot with a small group on cleaned sites. Demand from staff is not the same as readiness.", ev: [["Microsoft: get ready for Copilot with SharePoint Advanced Management", "https://learn.microsoft.com/sharepoint/get-ready-copilot-sharepoint-advanced-management"]], ids: ["it-m365", "f-data"] },
     { t: "Autonomous control of OT", p: "In July 2026, CISA warned water and wastewater utilities of active targeting of internet-exposed PLCs. AI that writes to control systems widens the attack surface. Keep models advisory, with operators in charge.", ev: [["Federal News Network on CISA guidance", "https://federalnewsnetwork.com/cybersecurity/2026/07/cisa-guidance-targets-water-sector-security-open-source-ai-and-more/"]], ids: ["po-auto"] },
     { t: "Unmanaged consumer AI for District work", p: "Prompts and outputs used for public business are likely public records, and reporters have obtained city workers' ChatGPT logs through records requests. Without a sanctioned tool, the District can't retain or produce those records.", ev: [["ABA: AI under public records laws (Fall 2026)", "https://www.americanbar.org/groups/communications_law/resources/magazine/2026-fall/ai-accessible-under-public-records-laws-foia/"], ["CSDA: Public Records Act meets AI", "https://www.csda.net/blogs/kristin-withrow1/2026/05/11/public-records-act-meets-ai"], ["UNC SOG: AI and public records", "https://canons.sog.unc.edu/blog/2026/03/11/the-intersection-of-artificial-intelligence-and-the-public-records-act/"]], ids: ["f-rec", "f-assist"] }
   ]}
@@ -769,9 +791,12 @@ const SIZE = {
 
 // ─── State ───────────────────────────────────────────────────────────────────
 const STORE_KEY = "ww-ai-roadmap-v3";
+const SEED_REV = 2;
+const REVISED_IDS = ["f-gov", "f-data", "f-assist"];
 function defaultState() {
   return {
     v: 3,
+    seed: SEED_REV,
     scenario: "Baseline draft",
     items: SEED.map(s => ({
       id: s.i, dept: s.d, title: s.t, desc: s.x, tier: s.tier, pattern: s.p, sens: s.s, acq: s.a,
@@ -792,9 +817,18 @@ let model = null;
 function loadState() {
   try {
     const raw = localStorage.getItem(STORE_KEY);
-    if (raw) { const s = JSON.parse(raw); if (s && s.v === 3 && Array.isArray(s.items)) return Object.assign(defaultState(), s); }
+    if (raw) { const s = JSON.parse(raw); if (s && s.v === 3 && Array.isArray(s.items)) return migrate(Object.assign(defaultState(), s), s.seed || 1); }
   } catch (e) { /* storage unavailable */ }
   return defaultState();
+}
+// Bring saved scenarios up to the current seed list: refresh revised items, add new ones, keep everything else
+function migrate(s, fromRev) {
+  if (fromRev >= SEED_REV) return s;
+  const fresh = defaultState().items;
+  s.items = s.items.map(x => REVISED_IDS.includes(x.id) ? Object.assign({}, fresh.find(f => f.id === x.id), { status: x.status, pin: x.pin }) : x);
+  fresh.forEach(f => { if (!s.items.some(x => x.id === f.id)) s.items.push(f); });
+  s.seed = SEED_REV;
+  return s;
 }
 let saveTimer = null;
 function save() {
@@ -1049,6 +1083,16 @@ function renderOverview() {
   });
   const top = Object.values(counts).sort((a, b) => b.ids.length - a.ids.length).slice(0, 5);
   $("#blockers").innerHTML = top.length ? `<div class="list-q">${top.map(b => `<div><span class="q">${b.ids.length} item${b.ids.length > 1 ? "s" : ""}</span><div><strong>${esc(b.text)}</strong><div class="small muted">${b.ids.slice(0, 4).map(id => esc(byId(id).title)).join(" · ")}${b.ids.length > 4 ? " …" : ""}</div></div></div>`).join("")}</div>` : `<p class="muted">Nothing is waiting. Every in-scope use case starts in the first quarter.</p>`;
+
+  // One starter project per department: earliest-starting in-scope item, else best low-effort idea under review
+  $("#starterTable").innerHTML = DEPTS.filter(d => d !== "Enterprise / IT").map(d => {
+    const inS = uc.filter(x => x.dept === d && !m.sched[x.id].blocked).sort((a, b) => m.sched[a.id].start - m.sched[b.id].start || score(b) - score(a));
+    const rev = state.items.filter(x => x.dept === d && x.status === "review" && x.e <= 3).sort((a, b) => score(b) - score(a));
+    const x = inS[0] || rev[0];
+    if (!x) return `<tr><td>${esc(d)}</td><td colspan="4" class="muted">No candidate yet. Add one on the Portfolio tab.</td></tr>`;
+    const isIn = x.status === "in";
+    return `<tr><td class="small">${esc(d)}</td><td><strong>${esc(x.title)}</strong></td><td>${isIn ? `<span class="chip good">In scope</span>` : `<span class="chip warn">Propose</span>`}</td><td class="mono small" style="white-space:nowrap">${isIn ? startText(x.id) : "—"}</td><td class="small">${esc(x.kpi)}</td></tr>`;
+  }).join("");
 
   const ranked = uc.slice().sort((a, b) => score(b) - score(a)).slice(0, 8);
   $("#topTable").innerHTML = ranked.map((x, i) => `<tr><td class="num">${i + 1}</td><td><strong>${esc(x.title)}</strong></td><td class="small">${esc(x.dept)}</td><td><span class="chip tier ${x.tier}">${TIERS[x.tier]}</span></td><td class="num">${score(x)}</td><td class="mono small">${startText(x.id)}</td><td class="num">${money(mid([m.perItem[x.id].lo, m.perItem[x.id].hi]))}</td></tr>`).join("");
@@ -1316,8 +1360,10 @@ function renderBrief() {
   lines.push("DECISIONS REQUESTED");
   lines.push(`1. Endorse the "${p.name.toLowerCase()}" posture and the foundation program (one-time ${range(foundOne)}).`);
   lines.push(`2. Direct staff to bring the AI policy and review group to the Board in ${qLong(m.sched["f-gov"] && !m.sched["f-gov"].blocked ? m.sched["f-gov"].end : 1)}.`);
-  lines.push(`3. Approve the first-two-quarter pilots listed above, each with a named owner, KPI and stop/continue date.`);
-  lines.push(`4. Include AI line items in the ${firstFy === fyOf(H - 1).label ? firstFy : fyOf(Math.min(4, H - 1)).label} budget, including the recurring run-rate.`);
+  lines.push(`3. Choose one sanctioned general-purpose assistant by ${qLong(1)} after a short side-by-side trial, and retire unapproved tools.`);
+  lines.push(`4. Approve default rules for the SharePoint/Teams cleanup, so content decisions don't stall: unowned sites archived after notice, org-wide links removed unless renewed. Hold M365 Copilot to a small pilot on cleaned sites until then.`);
+  lines.push(`5. Approve the first-two-quarter pilots listed above, each with a named owner, KPI and stop/continue date.`);
+  lines.push(`6. Include AI line items in the ${firstFy === fyOf(H - 1).label ? firstFy : fyOf(Math.min(4, H - 1)).label} budget, including the recurring run-rate.`);
   lines.push(`Decision checklist: ${done} of ${CHECKLIST.length} items confirmed.`);
   lines.push("");
   lines.push("Caveat: planning ranges, not quotes. Vendor-reported results are noted as such. Validate with procurement, finance, cybersecurity, records and legal review before committing funds.");
@@ -1334,7 +1380,7 @@ function applyLoaded(text) {
   try {
     const s = JSON.parse(text);
     if (!s || s.v !== 3 || !Array.isArray(s.items)) throw new Error("bad");
-    state = Object.assign(defaultState(), s);
+    state = migrate(Object.assign(defaultState(), s), s.seed || 1);
     $("#scenarioName").value = state.scenario;
     renderAll(); toast("Scenario loaded.");
   } catch (e) { toast("That text isn't a saved scenario from this dashboard."); }
