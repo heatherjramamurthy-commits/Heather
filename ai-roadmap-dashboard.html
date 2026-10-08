@@ -242,6 +242,10 @@ tr.detail:hover > td { background: var(--sunken); }
 .costs .t { font-weight: 600; line-height: 1.25; min-width: 200px; }
 .costs .d { font-size: .76rem; color: var(--muted); font-weight: 400; }
 .costs td.win { white-space: nowrap; font-family: var(--f-data); font-size: .82rem; }
+/* Buying guide */
+#reqTable select { width: 6.6em; }
+#matrix select { width: 4.6em; text-align: center; font-family: var(--f-data); }
+#matrix input[type="text"] { min-width: 9em; font-size: .82rem; }
 /* Budget chart */
 .chart svg { width: 100%; height: auto; display: block; }
 .chart text { fill: var(--muted); font-family: var(--f-data); font-size: 11px; }
@@ -306,6 +310,7 @@ ol.tight, ul.tight { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
     <button class="tab" role="tab" data-tab="roadmap">Roadmap</button>
     <button class="tab" role="tab" data-tab="readiness">Readiness &amp; guardrails</button>
     <button class="tab" role="tab" data-tab="budget">Budget</button>
+    <button class="tab" role="tab" data-tab="buy">Buying guide</button>
     <button class="tab" role="tab" data-tab="horizon">Horizon scan</button>
     <button class="tab" role="tab" data-tab="brief">Brief &amp; save</button>
   </div>
@@ -541,6 +546,67 @@ ol.tight, ul.tight { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
     <div class="card">
       <h3>By department, within the window</h3>
       <div class="tw"><table id="deptTable"></table></div>
+    </div>
+  </section>
+
+  <!-- BUYING GUIDE -->
+  <section class="panel" id="p-buy" data-panel="buy" hidden>
+    <div class="panel-head">
+      <div>
+        <h2>Buying guide</h2>
+        <p>A vendor-neutral way to decide what to buy. Describe the need, set the requirements, weigh the factors, then add the products you're evaluating and score them. Products appear only when you add them.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>1. What are we buying?</h3>
+      <div class="form-grid" style="margin-top:12px">
+        <label class="f">Purchase type<select id="buyType"></select></label>
+        <label class="f">Business owner<input type="text" id="buyOwner" placeholder="e.g., IT Manager for the District-wide assistant"></label>
+        <label class="f">Who will use it, and how many<input type="text" id="buyUsers" placeholder="e.g., ~180 staff, all departments"></label>
+      </div>
+      <div class="note small" id="buyTypeNote" style="margin-top:12px"></div>
+      <label class="f" style="margin-top:12px">Problem statement, in one or two sentences<textarea id="buyPurpose" placeholder="e.g., Staff use unapproved AI tools for drafting and summarizing. We need one approved assistant that protects District data, keeps records we can produce, and stays current."></textarea></label>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <header><h3>2. Business requirements</h3><span class="small muted" id="buyReqCount"></span></header>
+        <p class="small muted" style="margin-top:6px">Mark each requirement Must, Should, Nice or N/A. Keep Musts to about ten: a Must that no product meets ends the search.</p>
+        <div class="tw" style="margin-top:8px"><table id="reqTable"></table></div>
+      </div>
+      <div style="display:grid;gap:22px;align-content:start">
+        <div class="card">
+          <h3>3. Weigh the factors</h3>
+          <p class="small muted" style="margin-top:6px">How much each category counts in the score, 0–5. Musts count three times as much as Nice-to-haves within a category.</p>
+          <div id="weightGrid" style="margin-top:8px"></div>
+        </div>
+        <div class="card">
+          <h3>How to run the decision</h3>
+          <ol class="tight small" style="margin-top:10px">
+            <li><strong>Write the problem and name the owner.</strong> If no one will own it, don't buy it.</li>
+            <li><strong>Set requirements before looking at products.</strong> This keeps a demo from setting the criteria.</li>
+            <li><strong>Check what you already own.</strong> AI features in your CMMS, ERP, LIMS or security tools may cover it.</li>
+            <li><strong>Scan the market for 3–5 options,</strong> including state and cooperative contracts.</li>
+            <li><strong>Shortlist 2–3 and run a 30-day side-by-side</strong> on real, non-sensitive work. Staff from several departments do the scoring.</li>
+            <li><strong>Review the finalist</strong> for security, records, accessibility and legal, using the District's AI contract terms.</li>
+            <li><strong>Decide, write down why, and set a review date.</strong> With AI, revisit the choice every year.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <header><h3>4. Compare options</h3>
+        <div class="row"><input type="text" id="vendorName" placeholder="Product or vendor name" style="width:auto;min-width:220px" aria-label="Product or vendor name"><button class="btn small" id="addVendor">Add option</button></div>
+      </header>
+      <p class="small muted" style="margin-top:6px">Score each option: 0 = no, 1 = partly, 2 = yes, 3 = clearly better than others. Leave a cell blank until you know. Any Must scored 0 flags the option.</p>
+      <div class="tw" style="margin-top:8px"><table id="matrix"></table></div>
+    </div>
+
+    <div class="card">
+      <header><h3>Questions to ask every vendor</h3><button class="btn ghost small" id="copyQs">Copy questions</button></header>
+      <ol class="tight small" id="vendorQs" style="margin-top:10px"></ol>
     </div>
   </section>
 
@@ -783,6 +849,59 @@ const CHECKLIST = [
   ["Records and transparency are covered", "Retention for AI records is set, and the AI use register is published."]
 ];
 
+// Buying guide reference data
+const BUY_TYPES = {
+  general: ["General-purpose assistant for staff", "Chat-style assistant for drafting, summarizing and research. Decide this first. It needs little integration, so choose on data protection, records, model quality and price, and revisit the choice every year."],
+  embedded: ["AI feature in software we already own", "AI add-ons to the CMMS, ERP, LIMS, ITSM or security tools. Often the fastest and cheapest route. Check the data terms and the added cost, and still send it through intake."],
+  specialized: ["Specialized tool for one job", "Purpose-built products such as CCTV defect coding or aeration optimization. Ask for proof on District data, pilot with exit criteria, and confirm export formats into CMMS and GIS."],
+  platform: ["Platform or API to build on", "For knowledge assistants or agents built in-house or by an integrator. Only worth it if someone will maintain it. Weigh hosting, security review and ongoing staff time."]
+};
+const REQ_CATS = { data: "Data protection", records: "Records & transparency", security: "Security & identity", capability: "Capability", integration: "Integration", usability: "Usability & adoption", contract: "Cost & contract", vendor: "Vendor strength" };
+const REQS = [
+  ["dp1", "data", "District prompts, files and outputs are never used to train the vendor's models", "must"],
+  ["dp2", "data", "Data stored and processed in the United States", "should"],
+  ["dp3", "data", "Admin-controlled retention and deletion", "must"],
+  ["dp4", "data", "Warnings or blocks when sensitive data is pasted", "should"],
+  ["rec1", "records", "Chats and outputs can be exported for public records requests and legal holds", "must"],
+  ["rec2", "records", "Usage logs by user and date", "should"],
+  ["rec3", "records", "Supports labeling or disclosing AI-generated content", "nice"],
+  ["sec1", "security", "Single sign-on with the District's identity provider, with MFA", "must"],
+  ["sec2", "security", "Admins can turn features, connectors and file uploads on or off by group", "must"],
+  ["sec3", "security", "Independent security attestation (SOC 2 Type II; StateRAMP or FedRAMP where offered)", "should"],
+  ["sec4", "security", "Accepts the District's AI contract terms (GovAI Coalition template or equivalent)", "should"],
+  ["cap1", "capability", "Current, high-quality models with frequent updates", "must"],
+  ["cap2", "capability", "Handles long PDFs, Word files and spreadsheets (permits, specs, reports)", "must"],
+  ["cap3", "capability", "Cites sources when answering from documents", "should"],
+  ["cap4", "capability", "Web search with citations", "should"],
+  ["cap5", "capability", "Reads images and scanned documents (photos, as-builts, forms)", "nice"],
+  ["cap6", "capability", "Multi-step agent features with human approval steps", "nice"],
+  ["int1", "integration", "Optional connectors to District systems, off by default (SharePoint waits for the cleanup)", "nice"],
+  ["int2", "integration", "API or standard connectors for future projects", "nice"],
+  ["use1", "usability", "Easy for non-technical staff; shared templates or saved prompts", "must"],
+  ["use2", "usability", "Admin analytics to measure adoption and value", "should"],
+  ["use3", "usability", "Accessibility conformance (WCAG 2.1 AA / Section 508, with a VPAT)", "must"],
+  ["use4", "usability", "Vendor training and onboarding included", "nice"],
+  ["con1", "contract", "Available on a state or cooperative contract (e.g., CDT SITeS, NASPO ValuePoint)", "should"],
+  ["con2", "contract", "Predictable pricing: per seat or capped usage, with a multi-year price lock", "should"],
+  ["con3", "contract", "Exit path: short terms, and full data export when the contract ends", "must"],
+  ["con4", "contract", "Free or low-cost pilot before commitment", "should"],
+  ["ven1", "vendor", "Public-sector customers and references similar to the District", "should"],
+  ["ven2", "vendor", "Responsive support with a named contact", "nice"]
+];
+const PRIO = { must: ["Must", 3], should: ["Should", 2], nice: ["Nice", 1], na: ["N/A", 0] };
+const VENDOR_QS = [
+  "Is any District data used to train or improve your models? Will you put that exclusion in the contract?",
+  "Where is our data stored and processed? What are the retention defaults, and can we delete data ourselves?",
+  "Can we export every user's prompts and outputs for a public records request or legal hold? In what format?",
+  "Which models power the product, and how soon after release do you adopt new ones?",
+  "Do you support single sign-on with our identity provider? Which security attestations do you hold (SOC 2 Type II, StateRAMP, FedRAMP)?",
+  "Can you provide an accessibility conformance report (VPAT) for WCAG 2.1 AA?",
+  "Is pricing per seat or by usage? What's the government price, can it be locked for multiple years, and is it on a state or cooperative contract?",
+  "What happens to our data if we leave, and how long does an export take?",
+  "Can we run a 30-day pilot with 20–30 users at little or no cost?",
+  "Which public agencies of our size and type use the product, and can we talk to them?"
+];
+
 const SIZE = {
   S: { tier: "quick", v: 3, f: 4, r: 2, e: 2, dur: 2, one: [5000, 15000], ann: [3000, 8000] },
   M: { tier: "strategic", v: 4, f: 3, r: 2, e: 3, dur: 3, one: [20000, 50000], ann: [8000, 20000] },
@@ -805,6 +924,7 @@ function defaultState() {
     })),
     readiness: { gov: 40, cyber: 55, data: 35, staff: 40, procurement: 50, budget: 50 },
     assume: { start: "2027-01", fy: 7, lead: 1, cap: 5, stance: "standard", review: "Required for all AI outputs used in District work" },
+    buy: { type: "general", owner: "", users: "", purpose: "", prio: Object.fromEntries(REQS.map(r => [r[0], r[3]])), w: { data: 5, records: 4, security: 5, capability: 4, integration: 2, usability: 4, contract: 3, vendor: 2 }, vendors: [] },
     budget: { env: 500000, cont: 15, gov: 30000, train: 40000, staff: 120000 },
     weights: { v: 3, f: 2, r: 1.5, e: 1 },
     checks: CHECKLIST.map(() => false)
@@ -1026,7 +1146,7 @@ function renderAll() {
   const e = qDate(H - 1);
   $("#mastYears").textContent = qDate(0).y + "–" + (e.m + 2 > 12 ? e.y + 1 : e.y);
   $("#tbWindow").textContent = windowLabel();
-  ({ overview: renderOverview, portfolio: renderPortfolio, roadmap: renderRoadmap, readiness: renderReadiness, budget: renderBudget, horizon: renderHorizon, brief: renderBrief })[ui.tab]();
+  ({ overview: renderOverview, portfolio: renderPortfolio, roadmap: renderRoadmap, readiness: renderReadiness, budget: renderBudget, buy: renderBuy, horizon: renderHorizon, brief: renderBrief })[ui.tab]();
   save();
 }
 function setTab(t) {
@@ -1307,6 +1427,56 @@ function renderCostTable(keepRows) {
 }
 function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw || 1))); const n = raw / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p; }
 
+// ─── Buying guide ────────────────────────────────────────────────────────────
+function vendorScore(v) {
+  const B = state.buy;
+  let got = 0, max = 0, scored = 0, total = 0;
+  const fails = [];
+  REQS.forEach(([id, cat, text]) => {
+    const pm = PRIO[B.prio[id]][1]; if (!pm) return;
+    total++;
+    const sc = v.scores[id];
+    if (sc == null || sc === "") return;
+    scored++;
+    const w = Number(B.w[cat]) * pm;
+    got += w * Number(sc); max += w * 3;
+    if (B.prio[id] === "must" && Number(sc) === 0) fails.push(text);
+  });
+  return { pct: max ? Math.round(100 * got / max) : null, scored, total, fails };
+}
+function renderBuy() {
+  const B = state.buy;
+  $("#buyType").innerHTML = opt(Object.entries(BUY_TYPES).map(([k, v]) => [k, v[0]]), B.type);
+  $("#buyTypeNote").textContent = BUY_TYPES[B.type][1];
+  ["owner", "users", "purpose"].forEach(k => { const el = $("#buy" + k[0].toUpperCase() + k.slice(1)); if (document.activeElement !== el) el.value = B[k]; });
+  const counts = { must: 0, should: 0, nice: 0, na: 0 }; REQS.forEach(r => counts[B.prio[r[0]]]++);
+  $("#buyReqCount").textContent = `${counts.must} must · ${counts.should} should · ${counts.nice} nice`;
+  $("#reqTable").innerHTML = `<thead><tr><th>Requirement</th><th>Priority</th></tr></thead><tbody>` + Object.entries(REQ_CATS).map(([cat, label]) =>
+    `<tr><td colspan="2" class="eyebrow" style="padding-top:14px">${esc(label)}</td></tr>` + REQS.filter(r => r[1] === cat).map(([id, , text]) =>
+      `<tr><td class="small">${esc(text)}</td><td><select class="mini" data-prio="${id}" aria-label="Priority">${opt(Object.entries(PRIO).map(([k, v]) => [k, v[0]]), B.prio[id])}</select></td></tr>`).join("")).join("") + `</tbody>`;
+  $("#weightGrid").innerHTML = Object.entries(REQ_CATS).map(([cat, label]) =>
+    `<div class="slider"><div class="top"><label for="bw-${cat}">${esc(label)}</label><span class="num" id="bwv-${cat}">${B.w[cat]}</span></div><input type="range" min="0" max="5" step="1" id="bw-${cat}" data-bw="${cat}" value="${B.w[cat]}"></div>`).join("");
+  renderMatrix();
+  $("#vendorQs").innerHTML = VENDOR_QS.map(q => `<li>${esc(q)}</li>`).join("");
+}
+function renderMatrix() {
+  const B = state.buy, V = B.vendors;
+  if (!V.length) { $("#matrix").innerHTML = `<tbody><tr><td class="muted">No options added yet. Add the products you're evaluating above. Each one gets a column here, and its score updates as you fill it in.</td></tr></tbody>`; return; }
+  const res = V.map(vendorScore);
+  const best = Math.max(...res.map(r => (r.pct ?? -1) - (r.fails.length ? 1000 : 0)));
+  const cell = (v, id) => `<td><select class="mini score" data-vs="${v.id}" data-req="${id}" aria-label="${esc(v.name)} score">${opt([["", "–"], ["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"]], v.scores[id] ?? "")}</select></td>`;
+  let html = `<thead><tr><th>Requirement</th><th>Priority</th>${V.map(v => `<th style="min-width:110px">${esc(v.name)} <button class="chip" data-delv="${v.id}" title="Remove ${esc(v.name)}" aria-label="Remove ${esc(v.name)}">×</button></th>`).join("")}</tr></thead><tbody>`;
+  html += `<tr class="total"><td>Weighted score</td><td></td>${res.map(r => `<td>${r.pct == null ? `<span class="muted">Not scored</span>` : `<span class="chip ${r.fails.length ? "bad" : (r.pct - 0 === best ? "good" : "")}">${r.pct}%</span>`}<div class="small muted">${r.scored} of ${r.total} scored</div>${r.fails.length ? `<div class="small" style="color:var(--bad)">Fails ${r.fails.length} must-have${r.fails.length > 1 ? "s" : ""}</div>` : ""}</td>`).join("")}</tr>`;
+  Object.entries(REQ_CATS).forEach(([cat, label]) => {
+    const rows = REQS.filter(r => r[1] === cat && B.prio[r[0]] !== "na");
+    if (!rows.length) return;
+    html += `<tr><td colspan="${V.length + 2}" class="eyebrow" style="padding-top:14px">${esc(label)} · weight ${B.w[cat]}</td></tr>`;
+    rows.forEach(([id, , text]) => { html += `<tr><td class="small">${esc(text)}</td><td class="small">${PRIO[B.prio[id]][0]}</td>${V.map(v => cell(v, id)).join("")}</tr>`; });
+  });
+  html += `<tr><td class="small">Notes</td><td></td>${V.map(v => `<td><input type="text" data-vnote="${v.id}" value="${esc(v.notes || "")}" placeholder="Contract, price, pilot" aria-label="${esc(v.name)} notes"></td>`).join("")}</tr></tbody>`;
+  $("#matrix").innerHTML = html;
+}
+
 // ─── Horizon ─────────────────────────────────────────────────────────────────
 function renderHorizon() {
   $("#radar").innerHTML = HORIZON.map(r => `<div class="ring" style="--ring:${r.color}"><header><h3>${r.ring}</h3><p>${r.blurb}</p></header>${r.items.map(t => `<article class="trend"><h4>${esc(t.t)}</h4><p>${esc(t.p)}</p>${t.ids.length ? `<div class="chips">${t.ids.map(id => { const it = byId(id); return it ? `<button class="chip" data-act="jump" data-id="${id}" title="Open in portfolio">${esc(it.title)}</button>` : ""; }).join("")}</div>` : ""}${t.ev.length ? `<div class="ev">${t.ev.map(([l, u]) => `<a href="${u}" target="_blank" rel="noopener">${esc(l)}</a>`).join(" · ")}</div>` : ""}</article>`).join("")}</div>`).join("");
@@ -1349,6 +1519,14 @@ function renderBrief() {
     late.forEach(x => { const s = m.sched[x.id]; lines.push(`- ${x.title}: ${s.blocked || s.reasons.filter(r => r.q === s.earliest || r.key === "capacity").map(r => r.text).join("; ")}`); });
   }
   lines.push("");
+  const BV = state.buy.vendors;
+  if (BV.length) {
+    lines.push("TOOL SELECTION");
+    lines.push(`- Purchase: ${BUY_TYPES[state.buy.type][0]}${state.buy.owner ? "; owner: " + state.buy.owner : ""}.`);
+    if (state.buy.purpose) lines.push(`- Problem: ${state.buy.purpose}`);
+    BV.map(v => ({ v, r: vendorScore(v) })).sort((a, b) => (a.r.fails.length > 0) - (b.r.fails.length > 0) || (b.r.pct ?? -1) - (a.r.pct ?? -1)).forEach(({ v, r }) => lines.push(`- ${v.name}: ${r.pct == null ? "not scored yet" : r.pct + "% weighted"} (${r.scored}/${r.total} requirements scored)${r.fails.length ? "; fails must-haves: " + r.fails.join("; ") : ""}${v.notes ? ". Notes: " + v.notes : ""}`));
+    lines.push("");
+  }
   lines.push("GUARDRAILS");
   lines.push(`- Human review: ${state.assume.review}.`);
   lines.push(`- Sensitive data stance: ${state.assume.stance === "strict" ? "strict, with no sensitive data until controls are proven" : "standard, with sensitive data allowed after review"}.`);
@@ -1456,6 +1634,30 @@ function init() {
     renderAll(); toast(`Added “${title}” as in scope. Its details are open below.`);
   });
 
+  // Buying guide
+  $("#buyType").addEventListener("change", e => { state.buy.type = e.target.value; renderBuy(); save(); });
+  ["owner", "users", "purpose"].forEach(k => $("#buy" + k[0].toUpperCase() + k.slice(1)).addEventListener("input", e => { state.buy[k] = e.target.value; save(); }));
+  $("#reqTable").addEventListener("change", e => { const id = e.target.dataset.prio; if (!id) return; state.buy.prio[id] = e.target.value; renderBuy(); save(); });
+  $("#weightGrid").addEventListener("input", e => { const c = e.target.dataset.bw; if (!c) return; state.buy.w[c] = Number(e.target.value); $("#bwv-" + c).textContent = e.target.value; renderMatrix(); save(); });
+  const addVendor = () => {
+    const n = $("#vendorName").value.trim(); if (!n) { toast("Type a product or vendor name first."); return; }
+    state.buy.vendors.push({ id: "v" + Date.now().toString(36), name: n, scores: {}, notes: "" });
+    $("#vendorName").value = ""; renderMatrix(); save(); toast(`Added ${n}. Score it in the table below.`);
+  };
+  $("#addVendor").addEventListener("click", addVendor);
+  $("#vendorName").addEventListener("keydown", e => { if (e.key === "Enter") addVendor(); });
+  $("#matrix").addEventListener("change", e => {
+    const el = e.target;
+    if (el.dataset.vs) { const v = state.buy.vendors.find(x => x.id === el.dataset.vs); if (el.value === "") delete v.scores[el.dataset.req]; else v.scores[el.dataset.req] = Number(el.value); renderMatrix(); save(); }
+    if (el.dataset.vnote) { state.buy.vendors.find(x => x.id === el.dataset.vnote).notes = el.value; save(); }
+  });
+  $("#matrix").addEventListener("click", e => {
+    const b = e.target.closest("[data-delv]"); if (!b) return;
+    if (b.dataset.armed) { state.buy.vendors = state.buy.vendors.filter(x => x.id !== b.dataset.delv); renderMatrix(); save(); }
+    else { b.dataset.armed = "1"; b.textContent = "Remove?"; }
+  });
+  $("#copyQs").addEventListener("click", () => copyText(VENDOR_QS.map((q, i) => `${i + 1}. ${q}`).join("\n"), null));
+
   $("#groupBy").addEventListener("change", e => { ui.groupBy = e.target.value; renderRoadmap(); });
 
   $("#sliders").addEventListener("input", e => { const k = e.target.dataset.r; if (!k) return; state.readiness[k] = Number(e.target.value); $("#rv-" + k).textContent = e.target.value; compute(); save(); });
@@ -1475,7 +1677,7 @@ function init() {
   });
 
   const h = (location.hash || "").slice(1);
-  setTab(["overview", "portfolio", "roadmap", "readiness", "budget", "horizon", "brief"].includes(h) ? h : "overview");
+  setTab(["overview", "portfolio", "roadmap", "readiness", "budget", "buy", "horizon", "brief"].includes(h) ? h : "overview");
 }
 init();
 </script>

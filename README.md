@@ -16,7 +16,14 @@ Open `ai-roadmap-dashboard.html` in any browser. There's no build step and no se
   The reason for every delay is shown.
 - **Readiness & guardrails:** six readiness scores, planning assumptions, gate rules and the non-negotiables (no AI writes to SCADA, a human certifies regulatory submissions, and so on).
 - **Budget:** costs follow the schedule and are split by fiscal year against an annual envelope, with one editable table of every project's cost ranges. Also shows the recurring run-rate that continues after the window.
+- **Buying guide:** a vendor-neutral selection framework: purchase type, business requirements marked Must/Should/Nice, category weights, a scoring matrix you fill with options as you evaluate them, and standard vendor questions.
 - **Horizon scan:** an adopt/pilot/watch/hold view of developments relevant to wastewater utilities, with sources (researched October 2026).
+
+## Standing principles
+
+- **Vendor-neutral.** The dashboard recommends criteria and a selection process, not products. Vendors are added in the Buying guide as the District evaluates them. The page was drafted with Claude (Anthropic), which also holds California's CDT agreement, and it discloses that wherever that agreement is mentioned.
+- **The assistant decision is separate from SharePoint.** A general-purpose assistant can launch while the Varonis-assisted SharePoint/Teams cleanup continues. M365 Copilot stays gated on the cleanup and starts as a small pilot on cleaned sites.
+- **Decisions have owners, deadlines and defaults.** When no one decides, the documented default applies.
 
 ## Origin
 
